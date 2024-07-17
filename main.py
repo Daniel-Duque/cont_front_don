@@ -78,7 +78,7 @@ with tab1:
     
 with tab2:
 
-    seaborn.histplot(df[["Valor real","Valor Proyectado"]],x="predict",y="value_million_dolar",cbar=True,bins=1000)
+    seaborn.histplot(df[["Valor real","Valor Proyectado"]],x="Valor real",y="Valor Proyectado",cbar=True,bins=1000)
     
     
     
