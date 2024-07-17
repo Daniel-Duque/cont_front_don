@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from plotly.subplots import make_subplots
 import plotly.graph_objs as go
 import geopandas as gp
-
+import seaborn
 import streamlit as st
 
 st.set_page_config(layout='wide')
@@ -29,7 +29,7 @@ extrange="Tamaño valor extraño"
 
 st.title("Banderas rojas contratación pública (valores en millones de pesos")
 
-tab0,tab1,tab2,tab3 = st.tabs(['selección','mapas :D',"gastos e ingresos","ingresos"])
+tab0,tab1,tab2,tab3 = st.tabs(['selección','mapas :D',"prediction quality","ingresos"])
 with tab0:
     
     
@@ -76,7 +76,9 @@ with tab1:
     fig.update_geos(fitbounds="locations", visible=False)
     st.plotly_chart(fig)
     
-    
+with tab2:
+
+    seaborn.histplot(df[["Valor real","Valor Proyectado"]],x="predict",y="value_million_dolar",cbar=True,bins=1000)
     
     
     
