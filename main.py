@@ -18,6 +18,7 @@ import plotly.graph_objs as go
 import geopandas as gp
 import seaborn
 import streamlit as st
+import matplotlib as mpl
 
 st.set_page_config(layout='wide')
 
@@ -32,7 +33,8 @@ st.title("Banderas rojas contratación pública (valores en millones de pesos")
 tab0,tab1,tab2,tab3 = st.tabs(['selección','mapas :D',"prediction quality","ingresos"])
 with tab0:
     
-    
+    depto="BOYACÁ"
+    muni="DUITAMA"
     depto=st.selectbox("Departamento Entidad",
                        pd.unique(filtrado1["Departamento Entidad"]))
     
@@ -77,7 +79,12 @@ with tab1:
     st.plotly_chart(fig)
     
 with tab2:
-
-    a=seaborn.histplot(df[["Valor real","Valor Proyectado"]],x="Valor real",y="Valor Proyectado",cbar=True,bins=1000)
-    st.pyplot(a)
+    
+    fig, axs = plt.subplots(nrows=1, ncols=2)
+    df_clean=df.dropna()
+    axs[0].hist2d(df_clean["Valor real"],df_clean["Valor Proyectado"],density=True,range=[[0,5e5],[0,5e5]],norm=mpl.colors.LogNorm(), #cmap=mpl.cm.gray
+                     bins=100)
+    axs[1].hist2d(df_clean["Valor real"],df_clean["Valor Proyectado"],range=[[0,5e5],[0,5e5]], #cmap=mpl.cm.gray
+                     bins=100)
+    st.pyplot(fig)
     
