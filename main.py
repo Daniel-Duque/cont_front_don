@@ -28,7 +28,7 @@ filtrado1=pd.read_csv(r"data/dicc/Ciudades.csv").sort_values(["Departamento Enti
 extrange="Tamaño valor extraño"
 
 
-st.title("Banderas rojas contratación pública (valores en millones de pesos")
+st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 
 tab0,tab1,tab2,tab3 = st.tabs(['selección','mapas :D',"prediction quality","ingresos"])
 with tab0:
