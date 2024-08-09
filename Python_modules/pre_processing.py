@@ -12,6 +12,14 @@ import geopandas as gp
 
 
 import streamlit as st
+link=r"C:\Users\usuario\Documents\contract-transparency-copia\data\resultados"
+
+def carga_multiple(link):
+    for i in os.listdir(link):
+        if "col_tri" in i:
+            df=pd.read_excel(link+"/"+i)
+            gb = df.groupby("Ciudad Entidad")    
+            a=[gb.get_group(x) for x in gb.groups]
 
 st.set_page_config(layout='wide')
 
