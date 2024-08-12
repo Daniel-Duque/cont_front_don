@@ -13,16 +13,26 @@ import geopandas as gp
 
 import streamlit as st
 link=r"C:\Users\usuario\Documents\contract-transparency-copia\data\resultados"
-#This function is not pretty
-def carga_multiple(link):
+linksave=r"C:\Users\usuario\Documents\GitHub\cont_front_don\data\particular"
+#This function is not pretty but it takes 
+#todo make robuster function for harder data
+def carga_multiple(link,linksave):
     for i in os.listdir(link):
         if "col_tri" in i:
             print(i)
             df=pd.read_excel(link+"/"+i)
-            gb = df.groupby("Ciudad Entidad")    
+            gb = df.groupby(["Departamento Entidad","Ciudad Entidad"])    
             for x in gb.groups:
                 print(x)
-                gb.get_group(x)
+                subdata=gb.get_group(x)
+                saving_place=linksave+"//"+x[0].upper()+"-"+x[1].upper()+".csv"
+                try:
+                    
+                    updating_data=pd.read_csv(saving_place)
+                    pd.concat([updating_data,updating_data]).to_csv(saving_place)
+                except FileNotFoundError:
+                    subdata.to_csv(saving_place)
+carga_multiple(link,linksave)             
 st.set_page_config(layout='wide')
 
 
