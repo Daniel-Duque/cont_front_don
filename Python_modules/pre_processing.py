@@ -13,14 +13,16 @@ import geopandas as gp
 
 import streamlit as st
 link=r"C:\Users\usuario\Documents\contract-transparency-copia\data\resultados"
-
+#This function is not pretty
 def carga_multiple(link):
     for i in os.listdir(link):
         if "col_tri" in i:
+            print(i)
             df=pd.read_excel(link+"/"+i)
             gb = df.groupby("Ciudad Entidad")    
-            a=[gb.get_group(x) for x in gb.groups]
-
+            for x in gb.groups:
+                print(x)
+                gb.get_group(x)
 st.set_page_config(layout='wide')
 
 
@@ -60,4 +62,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-df = geopandas.read_file(r"data/maps/MGN_MPIO_POLITICO.shp")  
+df = gp.read_file(r"data/maps/MGN_MPIO_POLITICO.shp")  
