@@ -56,7 +56,7 @@ with tab1:
                        pd.unique(filtrado1["Departamento Entidad"]),key=1)
     
 
-    resulting=filtrado1[filtrado1["Departamento Entidad"]==depto]
+    premap=filtrado1[filtrado1["Departamento Entidad"]==depto]
     
   
     submap=df[df["DPTO_CNMBR"]==depto]    
@@ -68,11 +68,14 @@ with tab1:
     
 with tab2:
     
-    fig, axs = plt.subplots(nrows=1, ncols=2)
+    fig, axs = plt.subplots(nrows=1, ncols=1)
     df_clean=df.dropna()
-    axs[0].hist2d(df_clean["Valor real"],df_clean["Valor Proyectado"],density=True,range=[[0,5e5],[0,5e5]],norm=mpl.colors.LogNorm(), #cmap=mpl.cm.gray
+    axs.hist2d(df_clean["Valor real"],df_clean["Valor Proyectado"],density=True,range=[[0,5e5],[0,5e5]],norm=mpl.colors.LogNorm(), #cmap=mpl.cm.gray
                      bins=100)
-    axs[1].hist2d(df_clean["Valor real"],df_clean["Valor Proyectado"],range=[[0,5e5],[0,5e5]], #cmap=mpl.cm.gray
-                     bins=100)
+
     st.pyplot(fig)
-    
+
+with tab3:
+    agru=resulting.groupby(["Entidad"]).sum()
+    agru=agru.sort_values("veces la predicción",ascending=False)
+    st.dataframe(agru.style.background_gradient(axis=None, cmap="Reds"))
