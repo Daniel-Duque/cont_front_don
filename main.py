@@ -27,26 +27,14 @@ filtrado1=pd.read_csv(r"data/dicc/Ciudades.csv").sort_values(["Departamento Enti
 
 extrange="Tamaño valor extraño"
 
-
+resulting=pd.read_csv(r"data/bquxjob_fc00752_19229a5e4a8.csv")
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 
 tab0,tab1,tab2,tab3 = st.tabs(['selección','mapas :D',"prediction quality","ingresos"])
 with tab0:
-    
-    depto="BOYACÁ"
-    muni="DUITAMA"
-    depto=st.selectbox("Departamento Entidad",
-                       pd.unique(filtrado1["Departamento Entidad"]))
-    
-
-    resulting=filtrado1[filtrado1["Departamento Entidad"]==depto]
-    
-    muni = st.selectbox("Ciudad Entidad",
-       pd.unique(resulting["Ciudad Entidad"]))    
-    
   
     
-    resulting=pd.read_csv(r"data/particular/"+depto+"-"+muni+".csv")
+    
     
     resulting=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
                          "Valor real","Valor Proyectado",extrange,"Similitud de valor",
