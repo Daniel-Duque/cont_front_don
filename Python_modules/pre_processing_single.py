@@ -11,7 +11,7 @@ import os
 import geopandas as gp
 
 filtrado1=pd.read_csv(
-    r"data/bquxjob_fc00752_19229a5e4a8.csv")
+    r"data/compilado_error.csv",encoding="latin-1",sep=";")
 
 
 filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado", "value_thousand_dolar": "Valor real","likelihood":"Similitud de valor"})
@@ -26,3 +26,5 @@ unique_dept=pd.unique(filtrado1["Departamento Entidad"])
 unique_cities=pd.unique(filtrado1["Ciudad Entidad"])
 unique_sector=pd.unique(filtrado1["Tipo de Contrato"])
 filtrado1.to_csv(r"data/cleaned.csv")
+filtrado1[0:50000].to_csv(r"data/cleaned1.csv")
+filtrado1[50000:].to_csv(r"data/cleaned2.csv")
