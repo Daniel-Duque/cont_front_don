@@ -13,9 +13,10 @@ import geopandas as gp
 filtrado1=pd.read_csv(
     r"data/compilado_error.csv",encoding="latin-1",sep=";")
 
-
-filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado", "value_thousand_dolar": "Valor real","likelihood":"Similitud de valor"})
 extrange="Tamaño valor extraño"
+filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado", "value_thousand_dolar": "Valor real","likelihood":"Similitud de valor"})
+
+
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000000
 filtrado1[extrange]=(filtrado1["perc_error"]-filtrado1["predicterr"])
 filtrado1["range-"]=filtrado1["exchange_rate"]*filtrado1["Valor Proyectado"]/2
@@ -26,8 +27,13 @@ unique_dept=pd.unique(filtrado1["Departamento Entidad"])
 unique_cities=pd.unique(filtrado1["Ciudad Entidad"])
 unique_sector=pd.unique(filtrado1["Tipo de Contrato"])
 filtrado1=filtrado1.sort_values("veces la predicción",ascending=False)
-filtrado1.to_csv(r"data/cleaned.csv")
+filtrado1[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
+                     "Valor real","Valor Proyectado","Similitud de valor"]].to_csv(r"data/cleaned.csv")
 filtrado1[0:50000].to_csv(r"data/cleaned1.csv")
 filtrado1[50000:].to_csv(r"data/cleaned2.csv")
-filtrado1.groupby(["Entidad"]).sum().to_csv(r"data/groupedent.csv")
-filtrado1.groupby(["Ciudad Entidad"]).sum().to_csv(r"data/groupedcit.csv")
+filtrado1[["Entidad","Tipo de Contrato",
+                     "Valor real","Valor Proyectado",extrange,"Similitud de valor",
+                     "veces la predicción"]].groupby(["Entidad"]).sum().to_csv(r"data/groupedent.csv")
+filtrado1[["Entidad","Tipo de Contrato",
+                     "Valor real","Valor Proyectado",extrange,"Similitud de valor",
+                     "veces la predicción","Ciudad Entidad"]].groupby(["Ciudad Entidad"]).sum().to_csv(r"data/groupedcit.csv")
