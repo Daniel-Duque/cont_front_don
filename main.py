@@ -49,7 +49,7 @@ df = gp.read_file(r"data/maps/MGN_MPIO_POLITICO.shp")
 df=df.merge(agroupados, how="left",left_on=["MPIO_CNMBR","DPTO_CNMBR"],
             right_on=["Ciudad Entidad","Departamento Entidad"])    
 
-
+#
     
 with tab1:
     depto=st.selectbox("Departamento Entidad",
