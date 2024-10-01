@@ -41,6 +41,7 @@ filtrado1=pd.read_csv(
 
 
 filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado", "value_thousand_dolar": "Valor real","likelihood":"Similitud de valor"})
+
 extrange="Tamaño valor extraño"
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000000
 filtrado1[extrange]=(filtrado1["Valor real"]-filtrado1["Valor Proyectado"]*2)*filtrado1["exchange_rate"]

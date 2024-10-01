@@ -28,23 +28,13 @@ filtrado1=pd.read_csv(r"data/dicc/Ciudades.csv").sort_values(["Departamento Enti
 extrange="Tamaño valor extraño"
 
 resulting=pd.concat([pd.read_csv(r"data/cleaned1.csv"),pd.read_csv(r"data/cleaned2.csv")]).reset_index()
+
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
-tab0,tab1,tab2,tab3 = st.tabs(['selección','mapas :D',"prediction quality","ingresos"])
-with tab0:
-  
-    
-    
-    
-    resulting=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor",
-                         "veces la predicción"]]      
+tab1,tab2,tab3,tab0 = st.tabs(['mapas :D',"prediction quality","ingresos",'selección'])
 
-    resulting=resulting.sort_values("veces la predicción",ascending=False)
     
-    st.dataframe(resulting.style.background_gradient(axis=None, cmap="Reds"))
-    
-agroupados=pd.read_csv(r"data/grouped.csv")
+agroupados=pd.read_csv(r"data/groupedcit.csv")
 df = gp.read_file(r"data/maps/MGN_MPIO_POLITICO.shp") 
 df=df.merge(agroupados, how="left",left_on=["MPIO_CNMBR","DPTO_CNMBR"],
             right_on=["Ciudad Entidad","Departamento Entidad"])    
@@ -79,3 +69,15 @@ with tab3:
     agru=resulting.groupby(["Entidad"]).sum()
     agru=agru.sort_values("veces la predicción",ascending=False)
     st.dataframe(agru.style.background_gradient(axis=None, cmap="Reds"))
+    
+with tab0:
+  
+    
+    
+    
+    resulting=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
+                         "Valor real","Valor Proyectado",extrange,"Similitud de valor",
+                         "veces la predicción"]]      
+
+    
+    st.dataframe(resulting.style.background_gradient(axis=None, cmap="Reds"))
