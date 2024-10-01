@@ -27,7 +27,6 @@ filtrado1=pd.read_csv(r"data/dicc/Ciudades.csv").sort_values(["Departamento Enti
 
 extrange="Tamaño valor extraño"
 
-resulting=pd.read_csv(r"data/cleaned1.csv")
 resulting=pd.concat([pd.read_csv(r"data/cleaned1.csv"),pd.read_csv(r"data/cleaned2.csv")])
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
