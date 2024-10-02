@@ -31,7 +31,7 @@ resulting=pd.concat([pd.read_csv(r"data/cleaned1.csv"),pd.read_csv(r"data/cleane
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
-tab1,tab2,tab3,tab0 = st.tabs(['mapas :D',"prediction quality","ingresos",'selección'])
+tab1,tab2,tab3,tab0 = st.tabs(['mapas :D',"prediction quality","ingresos",'Mil contratos mas extraños'])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")
@@ -60,7 +60,7 @@ with tab2:
     
     fig, axs = plt.subplots(nrows=1, ncols=1)
     df_clean=df.dropna()
-    axs.hist2d(df_clean["Valor real"],df_clean["Valor Proyectado"],density=True,range=[[0,5e5],[0,5e5]],norm=mpl.colors.LogNorm(), #cmap=mpl.cm.gray
+    axs.hist2d(resulting["Valor real"],resulting["Valor Proyectado"],density=True,range=[[0,5e2],[0,5e2]],norm=mpl.colors.LogNorm(), #cmap=mpl.cm.gray
                      bins=100)
 
     st.pyplot(fig)
@@ -77,7 +77,7 @@ with tab0:
     
     resulting=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
                          "Valor real","Valor Proyectado",extrange,"Similitud de valor",
-                         "veces la predicción"]]      
+                         "veces la predicción"]][0:1000]      
 
     
     st.dataframe(resulting.style.background_gradient(axis=None, cmap="Reds"))
