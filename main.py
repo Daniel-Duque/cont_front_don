@@ -31,7 +31,7 @@ resulting=pd.concat([pd.read_csv(r"data/cleaned1.csv"),pd.read_csv(r"data/cleane
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
-tab1,tab2,tab3,tab0 = st.tabs(['mapas :D',"prediction quality","ingresos",'Mil contratos mas extraños'])
+tab1,tab2,tab3,tab0 = st.tabs(['Mil contratos mas extraños','mapas :D',"prediction quality","ingresos"])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")
@@ -40,7 +40,17 @@ df=df.merge(agroupados, how="left",left_on=["MPIO_CNMBR","DPTO_CNMBR"],
             right_on=["Ciudad Entidad","Departamento Entidad"])    
 
 #
+with tab0:
+  
     
+    
+    
+    resulting=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
+                         "Valor real","Valor Proyectado",extrange,"Similitud de valor",
+                         "veces la predicción"]][0:1000]      
+
+    
+    st.dataframe(resulting.style.background_gradient(axis=None, cmap="Reds"))    
 with tab1:
     depto=st.selectbox("Departamento Entidad",
                        pd.unique(filtrado1["Departamento Entidad"]),key=1)
@@ -70,14 +80,3 @@ with tab3:
     agru=agru.sort_values("veces la predicción",ascending=False)
     st.dataframe(agru.style.background_gradient(axis=None, cmap="Reds"))
     
-with tab0:
-  
-    
-    
-    
-    resulting=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor",
-                         "veces la predicción"]][0:1000]      
-
-    
-    st.dataframe(resulting.style.background_gradient(axis=None, cmap="Reds"))
