@@ -45,12 +45,12 @@ with tab0:
     
     
     
-    resulting=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
+    resulting2=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
                          "Valor real","Valor Proyectado",extrange,"Similitud de valor",
                          "veces la predicción"]][0:1000]      
 
     
-    st.dataframe(resulting.style.background_gradient(axis=None, cmap="Reds"))    
+    st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))    
 with tab1:
     depto=st.selectbox("Departamento Entidad",
                        pd.unique(filtrado1["Departamento Entidad"]),key=1)
