@@ -17,7 +17,7 @@ extrange="Tamaño valor extraño"
 filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado", "value_thousand_dolar": "Valor real","likelihood":"Similitud de valor"})
 
 
-filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000000
+filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
 filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"]*filtrado1["exchange_rate"]
 filtrado1["Valor real"]=filtrado1["Valor real"]*filtrado1["exchange_rate"]
 filtrado1[extrange]=(filtrado1["perc_error"]-filtrado1["predicterr"])
