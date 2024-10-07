@@ -31,7 +31,7 @@ resulting=pd.concat([pd.read_csv(r"data/cleaned1.csv"),pd.read_csv(r"data/cleane
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
-tab0,tab1,tab2,tab3= st.tabs(['Mil contratos mas extraños','mapas :D',"prediction quality","ingresos"])
+tab0,tab1,tab2,tab3= st.tabs(['Mil contratos mas extraños','mapas',"Calidad de la predicción","Acumulado por entidades"])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")

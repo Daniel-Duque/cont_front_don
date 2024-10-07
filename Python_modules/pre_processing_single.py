@@ -20,7 +20,7 @@ filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado", "value_thousa
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
 filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"]*filtrado1["exchange_rate"]
 filtrado1["Valor real"]=filtrado1["Valor real"]*filtrado1["exchange_rate"]
-filtrado1[extrange]=(filtrado1["perc_error"]-filtrado1["predicterr"])
+filtrado1[extrange]=(filtrado1["perc_error"]-filtrado1["predicterr"])*filtrado1["Valor real"]
 filtrado1["range-"]=filtrado1["exchange_rate"]*filtrado1["Valor Proyectado"]/2
 filtrado1["veces la predicción"]=filtrado1["Valor real"]/filtrado1["Valor Proyectado"]
 filtrado1["Departamento Entidad"]=filtrado1["Departamento Entidad"].apply(str.upper)
