@@ -28,7 +28,7 @@ filtrado1["Ciudad Entidad"]=filtrado1["Ciudad Entidad"].apply(str.upper)
 unique_dept=pd.unique(filtrado1["Departamento Entidad"])
 unique_cities=pd.unique(filtrado1["Ciudad Entidad"])
 unique_sector=pd.unique(filtrado1["Tipo de Contrato"])
-filtrado1=filtrado1.sort_values("Similitud de valor",ascending=False)
+filtrado1=filtrado1.sort_values("Similitud de valor",ascending=True)
 
 filtrado1[0:50000][["Entidad","Descripción del Procedimiento","Tipo de Contrato",
                      "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción"]].to_csv(r"data/cleaned1.csv")
