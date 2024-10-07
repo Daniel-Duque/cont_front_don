@@ -70,7 +70,7 @@ with tab2:
     fig, axs = plt.subplots(nrows=1, ncols=1)
     df_clean=df.dropna()
     axs.hist2d(resulting["Valor real"],resulting["Valor Proyectado"],density=True,range=[[0,5e3],[0,5e3]],norm=mpl.colors.LogNorm(), #cmap=mpl.cm.gray
-                     bins=50,norm="log")
+                     bins=50)
 
     st.pyplot(fig)
 
