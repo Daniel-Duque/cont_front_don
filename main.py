@@ -31,7 +31,7 @@ resulting=pd.read_csv(r"data/cleaned0.csv")
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
-tab0,tab1,tab2,tab3= st.tabs(['Diez mil contratos mas extraños','mapas',"Calidad de la predicción","Acumulado por entidades"])
+tab0,tab1,tab2,tab3,tab4= st.tabs(['Diez mil contratos mas extraños','mapas',"Calidad de la predicción","Acumulado por entidades","municipios"])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")
@@ -78,4 +78,16 @@ with tab3:
     agru=pd.read_csv(r"data/groupedent.csv")
     agru=agru.sort_values("veces la predicción",ascending=False)
     st.dataframe(agru.style.background_gradient(axis=None, cmap="Reds"))
+    
+with tab4:
+    depto=st.selectbox("Departamento Entidad",
+                       pd.unique(filtrado1["Departamento Entidad"]),key=2)
+    muni=st.selectbox("Ciudad Entidad",
+                       pd.unique(filtrado1["Ciudad Entidad"]),key=3)
+    linksave=r"data/particular"
+    terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+".csv")[["Entidad",
+            "Descripción del Procedimiento","Tipo de Contrato",
+            "Valor real","Valor Proyectado",extrange,"Similitud de valor","URLProceso"]]
+    
+    st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"))
     

@@ -39,4 +39,20 @@ filtrado1[["Entidad",
 for i in range(0,15):
     filtrado1[50000*i:50000*(i+1)][["Entidad","Descripción del Procedimiento","Tipo de Contrato",
                          "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso"]].to_csv(r"data/cleaned"+str(i)+".csv")
-    
+
+linksave=r"data/particular"
+def carga_multiple(filtrado1,linksave):
+    print(i)
+    df=filtrado1
+    gb = df.groupby(["Departamento Entidad","Ciudad Entidad"])    
+    for x in gb.groups:
+        print(x)
+        subdata=gb.get_group(x)
+        saving_place=linksave+"//"+x[0].upper()+"-"+x[1].upper()+".csv"
+        try:
+            
+            updating_data=pd.read_csv(saving_place)
+            pd.concat([updating_data,updating_data]).to_csv(saving_place)
+        except FileNotFoundError:
+            subdata.to_csv(saving_place)    
+carga_multiple(filtrado1,linksave)
