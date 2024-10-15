@@ -20,7 +20,7 @@ filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado", "value_thousa
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
 filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"]*filtrado1["exchange_rate"]
 filtrado1["Valor real"]=filtrado1["Valor real"]*filtrado1["exchange_rate"]
-filtrado1[extrange]=np.log2(filtrado1["perc_error"]-filtrado1["predicterr"])
+filtrado1[extrange]=np.log2(filtrado1["perc_error"]-filtrado1["predicterr"])*filtrado1["Valor real"]
 filtrado1["range-"]=filtrado1["exchange_rate"]*filtrado1["Valor Proyectado"]/2
 filtrado1["veces la predicción"]=(filtrado1["Valor real"]/filtrado1["Valor Proyectado"])
 filtrado1["Departamento Entidad"]=filtrado1["Departamento Entidad"].apply(str.upper)
@@ -30,13 +30,13 @@ unique_cities=pd.unique(filtrado1["Ciudad Entidad"])
 unique_sector=pd.unique(filtrado1["Tipo de Contrato"])
 filtrado1=filtrado1.sort_values(extrange,ascending=False)
 
-filtrado1[["Entidad","Tipo de Contrato",
+filtrado1[["Entidad",
                      "Valor real","Valor Proyectado",extrange,"Similitud de valor",
                      "veces la predicción"]].groupby(["Entidad"]).sum().to_csv(r"data/groupedent.csv")
-filtrado1[["Entidad","Tipo de Contrato",
+filtrado1[["Entidad",
                      "Valor real","Valor Proyectado",extrange,"Similitud de valor",
                      "veces la predicción","Ciudad Entidad","Departamento Entidad"]].groupby(["Ciudad Entidad","Departamento Entidad"]).sum().to_csv(r"data/groupedcit.csv")
 for i in range(0,15):
     filtrado1[50000*i:50000*(i+1)][["Entidad","Descripción del Procedimiento","Tipo de Contrato",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción"]].to_csv(r"data/cleaned"+str(i)+".csv")
+                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso"]].to_csv(r"data/cleaned"+str(i)+".csv")
     

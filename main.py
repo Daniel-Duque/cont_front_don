@@ -46,7 +46,7 @@ with tab0:
     
     
     resulting2=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor"]][0:1000]      
+                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","URLProceso"]][0:1000]      
 
     
     st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))    
