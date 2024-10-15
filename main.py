@@ -83,7 +83,7 @@ with tab4:
     depto=st.selectbox("Departamento Entidad",
                        pd.unique(filtrado1["Departamento Entidad"]),key=2)
     muni=st.selectbox("Ciudad Entidad",
-                       pd.unique(filtrado1["Ciudad Entidad"]),key=3)
+                       pd.unique(filtrado1[filtrado1["Departamento Entidad"]==depto]["Ciudad Entidad"]),key=3)
     linksave=r"data/particular"
     terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+".csv")[["Entidad",
             "Descripción del Procedimiento","Tipo de Contrato",
