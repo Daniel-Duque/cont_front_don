@@ -30,13 +30,13 @@ unique_cities=pd.unique(filtrado1["Ciudad Entidad"])
 unique_sector=pd.unique(filtrado1["Tipo de Contrato"])
 filtrado1=filtrado1.sort_values("Similitud de valor",ascending=True)
 
-filtrado1[0:50000][["Entidad","Descripción del Procedimiento","Tipo de Contrato",
-                     "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción"]].to_csv(r"data/cleaned1.csv")
-filtrado1[50000:][["Entidad","Descripción del Procedimiento","Tipo de Contrato",
-                     "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción"]].to_csv(r"data/cleaned2.csv")
 filtrado1[["Entidad","Tipo de Contrato",
                      "Valor real","Valor Proyectado",extrange,"Similitud de valor",
                      "veces la predicción"]].groupby(["Entidad"]).sum().to_csv(r"data/groupedent.csv")
 filtrado1[["Entidad","Tipo de Contrato",
                      "Valor real","Valor Proyectado",extrange,"Similitud de valor",
                      "veces la predicción","Ciudad Entidad","Departamento Entidad"]].groupby(["Ciudad Entidad","Departamento Entidad"]).sum().to_csv(r"data/groupedcit.csv")
+for i in range(0,15):
+    filtrado1[50000*i:50000*(i+1)][["Entidad","Descripción del Procedimiento","Tipo de Contrato",
+                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción"]].to_csv(r"data/cleaned"+str(i)+".csv")
+    
