@@ -31,7 +31,7 @@ resulting=pd.read_csv(r"data/cleaned0.csv")
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
-tab0,tab1,tab2,tab3= st.tabs(['Mil contratos mas extraños','mapas',"Calidad de la predicción","Acumulado por entidades"])
+tab0,tab1,tab2,tab3= st.tabs(['Diez mil contratos mas extraños','mapas',"Calidad de la predicción","Acumulado por entidades"])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")
@@ -46,7 +46,7 @@ with tab0:
     
     
     resulting2=resulting[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","URLProceso"]][0:1000]      
+                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","URLProceso"]][0:10000]      
 
     
     st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))    
