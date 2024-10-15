@@ -27,7 +27,7 @@ filtrado1=pd.read_csv(r"data/dicc/Ciudades.csv").sort_values(["Departamento Enti
 
 extrange="Tamaño valor extraño"
 
-resulting=pd.concat([pd.read_csv(r"data/cleaned1.csv"),pd.read_csv(r"data/cleaned2.csv")]).reset_index()
+resulting=pd.read_csv(r"data/cleaned0.csv")
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
@@ -75,7 +75,7 @@ with tab2:
     st.pyplot(fig)
 
 with tab3:
-    agru=resulting.groupby(["Entidad"]).sum()
+    agru=pd.read_csv(r"data/groupedent.csv")
     agru=agru.sort_values("veces la predicción",ascending=False)
     st.dataframe(agru.style.background_gradient(axis=None, cmap="Reds"))
     
