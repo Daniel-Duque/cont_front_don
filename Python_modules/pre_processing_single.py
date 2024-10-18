@@ -11,10 +11,13 @@ import os
 import geopandas as gp
 import numpy as np
 filtrado1=pd.read_csv(
-    r"data/compilado_error.csv",encoding="latin-1",sep=";")
+    r"data/compilado_error (1).csv",encoding="latin-1",sep=";")
 
 extrange="Tamaño valor extraño"
-filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado", "value_thousand_dolar": "Valor real","likelihood":"Similitud de valor"})
+filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado",
+                                    "value_thousand_dolar": "Valor real",
+                                    "likelihood":"Similitud de valor",
+                                    "similarity":"Contrato relacionado con publicidad"})
 
 
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
@@ -29,16 +32,23 @@ unique_dept=pd.unique(filtrado1["Departamento Entidad"])
 unique_cities=pd.unique(filtrado1["Ciudad Entidad"])
 unique_sector=pd.unique(filtrado1["Tipo de Contrato"])
 filtrado1=filtrado1.sort_values(extrange,ascending=False)
-
+##agrupado por entidad
 filtrado1[["Entidad",
                      "Valor real","Valor Proyectado",extrange,"Similitud de valor",
                      "veces la predicción"]].groupby(["Entidad"]).sum().to_csv(r"data/groupedent.csv")
+#agrupado por ciudad
 filtrado1[["Entidad",
                      "Valor real","Valor Proyectado",extrange,"Similitud de valor",
                      "veces la predicción","Ciudad Entidad","Departamento Entidad"]].groupby(["Ciudad Entidad","Departamento Entidad"]).sum().to_csv(r"data/groupedcit.csv")
+#similar al comunicación
+filtrado1[["Entidad","Descripción del Procedimiento","Tipo de Contrato",
+                     "Valor real","Valor Proyectado",extrange,"Similitud de valor",
+                     "veces la predicción","Contrato relacionado con publicidad","URLProceso" ]][filtrado1["Contrato relacionado con publicidad"]>0.65].to_csv(r"data/cleanedcomu"+".csv")
+
+
 for i in range(0,15):
     filtrado1[50000*i:50000*(i+1)][["Entidad","Descripción del Procedimiento","Tipo de Contrato",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso"]].to_csv(r"data/cleaned"+str(i)+".csv")
+                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso",]].to_csv(r"data/cleaned"+str(i)+".csv")
 
 linksave=r"data/particular"
 def carga_multiple(filtrado1,linksave):
