@@ -31,7 +31,7 @@ resulting=pd.read_csv(r"data/cleaned0.csv")
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
-tab0,tab1,tab2,tab3,tab4= st.tabs(['Diez mil contratos mas extraños','mapas',"Calidad de la predicción","Acumulado por entidades","municipios"])
+tab0,tab1,tab2,tab3,tab4,tab5= st.tabs(['Diez mil contratos mas extraños','mapas',"Calidad de la predicción","Acumulado por entidades","municipios","comunicación"])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")
@@ -91,3 +91,12 @@ with tab4:
     
     st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"))
     
+with tab5:
+  
+    
+    
+    
+    resultingcom=pd.read_csv(r"data/cleanedcomu"+".csv")   
+
+    
+    st.dataframe(resultingcom.style.background_gradient(axis=None, cmap="Reds"))  
