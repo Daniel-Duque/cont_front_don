@@ -18,7 +18,7 @@ from sentence_transformers import util
 n=0
 project="warehouse-observatorio"
 table="warehouse-observatorio.Secop.SapoError"
-path=r"/home/dduque/Documents/GitHub/cont_front_don\data\resultados"
+path=r"/home/dduque/Documents/GitHub/cont_front_don/data"
 model = SentenceTransformer('all-distilroberta-v1')
 # 
 # Function to perform semantic search
@@ -45,7 +45,7 @@ data=semantic_search(prompt, data1, model)
 
 data["Descripción del Procedimiento"] = data["Descripción del Procedimiento"].str.replace('\\r\\n', ' ', regex=True)
 data["Nombre del Procedimiento"] = data["Nombre del Procedimiento"].str.replace('\\r\\n', ' ', regex=True)
-data=data.drop(["Unnamed: 0.1","Unnamed: 0"],axis=1)
+
 data=data.drop(['embeddings'],axis=1)
 
 # Initialize the model

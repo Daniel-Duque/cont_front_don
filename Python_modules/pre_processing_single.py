@@ -11,7 +11,7 @@ import os
 import geopandas as gp
 import numpy as np
 filtrado1=pd.read_csv(
-    r"data/compilado_error (1).csv",encoding="latin-1",sep=";")
+    r"data/compilado_error2.csv",encoding="latin-1",sep=";")
 
 extrange="Tamaño valor extraño"
 filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado",
