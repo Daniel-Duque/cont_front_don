@@ -18,13 +18,13 @@ from sentence_transformers import util
 n=0
 project="warehouse-observatorio"
 table="warehouse-observatorio.Secop.SapoError"
-path=r"/home/dduque/Documents/GitHub/cont_front_don/data"
+path=r"/data"
 model = SentenceTransformer('all-distilroberta-v1')
 # 
 # Function to perform semantic search
 def semantic_search(prompt, df, model, top_k=1000):
     # Generate embeddings for the descriptions
-    df['embeddings'] = df['Descripción del Procedimiento'].apply(lambda x: model.encode(x, convert_to_tensor=True))
+    df['embeddings'] = df['Descripción del Proceso'].apply(lambda x: model.encode(x, convert_to_tensor=True))
 
     prompt_embedding = model.encode(prompt, convert_to_tensor=True)
     similarities = df['embeddings'].apply(lambda x: util.pytorch_cos_sim(prompt_embedding, x).item())
@@ -38,7 +38,7 @@ prompt = "contratar con medios de comunicación"
 
 
 
-data1=pd.read_csv(r"/home/dduque/Documents/GitHub/cont_front_don/data/compilado_error.csv",encoding="latin-1",delimiter=";")
+data1=pd.read_csv(r"/home/dduque/Documents/GitHub/cont_front_don/data/compilado_error.csv",encoding="utf-8",delimiter=";")
 data=semantic_search(prompt, data1, model)
 
             
