@@ -24,7 +24,7 @@ model = SentenceTransformer('all-distilroberta-v1')
 # Function to perform semantic search
 def semantic_search(prompt, df, model, top_k=1000):
     # Generate embeddings for the descriptions
-    df['embeddings'] = df['Descripción del Proceso'].apply(lambda x: model.encode(x, convert_to_tensor=True))
+    df['embeddings'] = df['Descripcion del Proceso'].apply(lambda x: model.encode(x, convert_to_tensor=True))
 
     prompt_embedding = model.encode(prompt, convert_to_tensor=True)
     similarities = df['embeddings'].apply(lambda x: util.pytorch_cos_sim(prompt_embedding, x).item())
@@ -38,13 +38,12 @@ prompt = "contratar con medios de comunicación"
 
 
 
-data1=pd.read_csv(r"/home/dduque/Documents/GitHub/cont_front_don/data/compilado_error.csv",encoding="utf-8",delimiter=";")
+data1=pd.read_csv(r"data/compilado_error.csv",encoding="utf-8",delimiter=";")
 data=semantic_search(prompt, data1, model)
 
             
 
-data["Descripción del Procedimiento"] = data["Descripción del Procedimiento"].str.replace('\\r\\n', ' ', regex=True)
-data["Nombre del Procedimiento"] = data["Nombre del Procedimiento"].str.replace('\\r\\n', ' ', regex=True)
+data["Descripcion del Proceso"] = data["Descripcion del Proceso"].str.replace('\\r\\n', ' ', regex=True)
 
 data=data.drop(['embeddings'],axis=1)
 
