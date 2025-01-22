@@ -29,7 +29,8 @@ extrange="Tamaño valor extraño"
 filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado",
                                     "value_thousand_dolar": "Valor real",
                                     "likelihood":"Similitud de valor",
-                                    "similarity":"Contrato relacionado con publicidad"})
+                                    "similarity":"Contrato relacionado con publicidad"}
+                           ).drop_duplicates(["URLProceso"])
 
 
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
@@ -51,9 +52,10 @@ nombres= ["Nombre Entidad",
 filtrado1[nombres].groupby(["Nombre Entidad"]).sum().to_csv(r"data/groupedent.csv")
 #agrupado por ciudad
 filtrado1[nombres+["veces la predicción","Ciudad Entidad","Departamento Entidad"]].groupby(["Ciudad Entidad","Departamento Entidad"]).sum().to_csv(r"data/groupedcit.csv")
+
 #similar al comunicación
 
-for i in range(0,15):
+for i in range(4,40):
     prompt = "contratar con medios de comunicación"
 
     filtrado2=filtrado1[50000*i:50000*(i+1)][["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
