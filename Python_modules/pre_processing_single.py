@@ -60,6 +60,9 @@ for i in range(4,40):
 
     filtrado2=filtrado1[50000*i:50000*(i+1)][["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
                          "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso",]]
+    
+    
+    
     filtrado2=semantic_search(prompt,filtrado2,model)
     filtrado2=filtrado2.drop(['embeddings'],axis=1)
     filtrado2.to_csv(r"data/cleaned"+str(i)+".csv")
