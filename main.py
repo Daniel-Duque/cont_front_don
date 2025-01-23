@@ -31,7 +31,7 @@ resulting=pd.read_csv(r"data/cleaned0.csv")
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 864344)
-tab0,tab1,tab2,tab3,tab4,tab5= st.tabs(['Diez mil contratos mas extraños','mapas',"Calidad de la predicción","Acumulado por entidades","municipios","comunicación"])
+tab0,tab1,tab2,tab3,tab4,tab5= st.tabs(["municipios",'mapas',"Calidad de la predicción","Acumulado por entidades",'Diez mil contratos mas extraños',"comunicación"])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")
@@ -42,14 +42,27 @@ df=df.merge(agroupados, how="left",left_on=["MPIO_CNMBR","DPTO_CNMBR"],
 #
 with tab0:
   
-    
-    
-    
-    resulting2=resulting[["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso"]][0:10000]      
+    depto=st.selectbox("Departamento Entidad",
+                       pd.unique(filtrado1["Departamento Entidad"]),key=2)
+    muni=st.selectbox("Ciudad Entidad",
+                       pd.unique(filtrado1[filtrado1["Departamento Entidad"]==depto]["Ciudad Entidad"]),key=3)
+    #text search taken from https://blog.streamlit.io/create-a-search-engine-with-streamlit-and-google-sheets/
+    text_search = st.text_input("Busca contratos en tu ciudad.", value="")
 
+    #
     
-    st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))    
+    linksave=r"data/particular"
+    terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+".csv")[["Entidad",
+            "Descripción del Procedimiento","Tipo de Contrato",
+            "Valor real","Valor Proyectado",extrange,"Similitud de valor","URLProceso"]]
+    m1 = terri["Descripción del Procedimiento"].str.lower().str.contains(text_search)
+    df_search = terri[m1]
+    if text_search:
+        st.dataframe(df_search .style.background_gradient(axis=None, cmap="Reds"))
+    else:
+        st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"))
+    
+    
 with tab1:
     depto=st.selectbox("Departamento Entidad",
                        pd.unique(filtrado1["Departamento Entidad"]),key=1)
@@ -80,26 +93,13 @@ with tab3:
     st.dataframe(agru.style.background_gradient(axis=None, cmap="Reds"))
     
 with tab4:
-    depto=st.selectbox("Departamento Entidad",
-                       pd.unique(filtrado1["Departamento Entidad"]),key=2)
-    muni=st.selectbox("Ciudad Entidad",
-                       pd.unique(filtrado1[filtrado1["Departamento Entidad"]==depto]["Ciudad Entidad"]),key=3)
-    #text search taken from https://blog.streamlit.io/create-a-search-engine-with-streamlit-and-google-sheets/
-    text_search = st.text_input("Busca contratos en tu ciudad.", value="")
 
-    #
     
-    linksave=r"data/particular"
-    terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+".csv")[["Entidad",
-            "Descripción del Procedimiento","Tipo de Contrato",
-            "Valor real","Valor Proyectado",extrange,"Similitud de valor","URLProceso"]]
-    m1 = terri["Descripción del Procedimiento"].str.lower().str.contains(text_search)
-    df_search = terri[m1]
-    if text_search:
-        st.dataframe(df_search .style.background_gradient(axis=None, cmap="Reds"))
-    else:
-        st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"))
+    resulting2=resulting[["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
+                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso"]][0:10000]      
+
     
+    st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))    
 with tab5:
   
     
