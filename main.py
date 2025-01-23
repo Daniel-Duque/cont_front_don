@@ -84,12 +84,21 @@ with tab4:
                        pd.unique(filtrado1["Departamento Entidad"]),key=2)
     muni=st.selectbox("Ciudad Entidad",
                        pd.unique(filtrado1[filtrado1["Departamento Entidad"]==depto]["Ciudad Entidad"]),key=3)
+    #text search taken from https://blog.streamlit.io/create-a-search-engine-with-streamlit-and-google-sheets/
+    text_search = st.text_input("Busca contratos en tu ciudad.", value="")
+
+    #
+    
     linksave=r"data/particular"
     terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+".csv")[["Entidad",
             "Descripción del Procedimiento","Tipo de Contrato",
             "Valor real","Valor Proyectado",extrange,"Similitud de valor","URLProceso"]]
-    
-    st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"))
+    m1 = terri["Descripción del Procedimiento"].str.lower().str.contains(text_search)
+    df_search = terri[m1]
+    if text_search:
+        st.dataframe(df_search .style.background_gradient(axis=None, cmap="Reds"))
+    else:
+        st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"))
     
 with tab5:
   
