@@ -22,8 +22,7 @@ def semantic_search(prompt, df, model, top_k=1000):
     df['similarity'] = similarities
     return df
 model = SentenceTransformer('all-distilroberta-v1')
-filtrado1=pd.read_csv(
-    r"data/compilado_error.csv",encoding="utf-8",sep=";")
+filtrado1=pd.read_csv(r"data/compilado_error.csv",encoding="utf-8",sep=";")
 
 extrange="Tamaño valor extraño"
 filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado",
@@ -37,7 +36,7 @@ filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
 filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"]*filtrado1["exchange_rate"]
 filtrado1["Valor real"]=filtrado1["Valor real"]*filtrado1["exchange_rate"]
 filtrado1[extrange]=(filtrado1["perc_error"]-filtrado1["predicterr"])*filtrado1["Valor real"]
-filtrado1[extrange]=filtrado1["Valor real"]+filtrado1["Valor real"]*filtrado1["predicterr"]
+
 filtrado1["range-"]=filtrado1["exchange_rate"]*filtrado1["Valor Proyectado"]/2
 filtrado1["veces la predicción"]=(filtrado1["Valor real"]/filtrado1["Valor Proyectado"])
 filtrado1["Departamento Entidad"]=filtrado1["Departamento"].apply(str.upper)
