@@ -64,7 +64,7 @@ with tab0:
     
     
     resulting2=resulting[["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
-                         "Valor real","Valor Proyectado",extrange,"URLProceso"]][0:10000]      
+                         "Valor real","Valor Proyectado",extrange,"URLProceso"]][0:1000]      
 
     
     st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))    
@@ -99,7 +99,7 @@ with tab3:
     
 with tab4:
     resulting2=resulting[["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso"]][0:10000]      
+                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso"]][0:1000]      
 
     
     st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))   
