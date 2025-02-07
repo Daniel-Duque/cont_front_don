@@ -55,8 +55,8 @@ filtrado1[nombres+["veces la predicción","Ciudad Entidad","Departamento Entidad
 
 #similar al comunicación
 
-for i in range(4,40):
-    prompt = "contratar con medios de comunicación"
+for i in range(0,40):
+    prompt = "Pauta | Publicidad | Prensa | Periodismo | Periodista | Divulgación | Multimedia | Redes Sociales | Televisión | Radio | Radial | Periódico | Audiovisual | Video | Revista | Comunicaciones"
 
     filtrado2=filtrado1[50000*i:50000*(i+1)][["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
                          "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso",]]
@@ -76,11 +76,13 @@ def carga_multiple(filtrado1,linksave):
     for x in gb.groups:
         print(x)
         subdata=gb.get_group(x)
-        saving_place=linksave+"//"+x[0].upper()+"-"+x[1].upper()+".csv"
-        try:
-            
-            updating_data=pd.read_csv(saving_place)
-            pd.concat([updating_data,updating_data]).to_csv(saving_place)
-        except FileNotFoundError:
-            subdata.to_csv(saving_place)    
+        partitions=len(subdata)/5000
+        for part in range(0,partitions):
+            saving_place=linksave+"//"+x[0].upper()+"-"+x[1].upper()+str(part)+".csv"
+            try:
+                
+                updating_data=pd.read_csv(saving_place)
+                pd.concat([updating_data,updating_data]).to_csv(saving_place)
+            except FileNotFoundError:
+                subdata.to_csv(saving_place)    
 carga_multiple(filtrado1,linksave)

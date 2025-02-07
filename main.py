@@ -63,11 +63,7 @@ with tab0:
         st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"))    
     
     
-    resulting2=resulting[["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
-                         "Valor real","Valor Proyectado",extrange,"URLProceso"]][0:1000]      
-
-    
-    st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))    
+ 
 with tab1:
     depto=st.selectbox("Departamento Entidad",
                        pd.unique(filtrado1["Departamento Entidad"]),key=1)
