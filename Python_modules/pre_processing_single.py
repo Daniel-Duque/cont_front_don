@@ -76,13 +76,16 @@ def carga_multiple(filtrado1,linksave):
     for x in gb.groups:
         print(x)
         subdata=gb.get_group(x)
-        partitions=len(subdata)/5000
-        for part in range(0,partitions):
+        partitions=len(subdata)//5000
+        for part in range(0,partitions+1):
             saving_place=linksave+"//"+x[0].upper()+"-"+x[1].upper()+str(part)+".csv"
+            subdata[part*5000:(part+1)*5000].to_csv(saving_place)
+            """
             try:
                 
                 updating_data=pd.read_csv(saving_place)
                 pd.concat([updating_data,updating_data]).to_csv(saving_place)
             except FileNotFoundError:
                 subdata.to_csv(saving_place)    
+            """
 carga_multiple(filtrado1,linksave)

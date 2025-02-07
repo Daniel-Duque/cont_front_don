@@ -52,10 +52,10 @@ with tab0:
     #
     
     linksave=r"data/particular"
-    terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+".csv")[["Entidad",
-            "Descripción del Procedimiento","Tipo de Contrato",
+    terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
+            "Descripcion del Proceso","Tipo de Contrato","Fecha de Firma",
             "Valor real","Valor Proyectado",extrange,"URLProceso"]]
-    m1 = terri["Descripción del Procedimiento"].str.lower().str.contains(text_search,case=False)
+    m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
     df_search = terri[m1]
     if text_search:
         st.dataframe(df_search .style.background_gradient(axis=None, cmap="Reds"))
