@@ -19,7 +19,7 @@ import geopandas as gp
 import seaborn
 import streamlit as st
 import matplotlib as mpl
-
+import datetime
 st.set_page_config(layout='wide')
 
 
@@ -39,7 +39,14 @@ df = gp.read_file(r"data/maps/MGN_MPIO_POLITICO.shp")
 df=df.merge(agroupados, how="left",left_on=["MPIO_CNMBR","DPTO_CNMBR"],
             right_on=["Ciudad Entidad","Departamento Entidad"])    
 
-#
+today = datetime.datetime.now()
+year = today.year 
+jan_1 = datetime.date(year-2, 1, 1)
+dec_31 = datetime.date(year, 12, 31)
+
+
+
+
 with tab0:
   
     depto=st.selectbox("Departamento Entidad",
@@ -47,14 +54,32 @@ with tab0:
     muni=st.selectbox("Ciudad Entidad",
                        pd.unique(filtrado1[filtrado1["Departamento Entidad"]==depto]["Ciudad Entidad"]),key=3)
     #text search taken from https://blog.streamlit.io/create-a-search-engine-with-streamlit-and-google-sheets/
-    text_search = st.text_input("Busca contratos en tu ciudad.", value="")
 
-    #
+
+
+    on = st.toggle("Opciones extra")
+    text_search=""
+    d=[jan_1,dec_31]
     
+    if on:
+        text_search = st.text_input("Busca contratos en tu ciudad.", value="")
+
+        
+        d = st.date_input(
+            "",
+            (jan_1, datetime.date(year, 1, 7)),
+            jan_1,
+            dec_31,
+            format="MM.DD.YYYY",
+        )
+        d
     linksave=r"data/particular"
     terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
             "Descripcion del Proceso","Tipo de Contrato","Fecha de Firma",
             "Valor real","Valor Proyectado",extrange,"URLProceso"]]
+    terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
+    terri=terri[terri["Fecha de Firma"]>d[0]]
+    terri=terri[terri["Fecha de Firma"]<=d[1]]            
     m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
     df_search = terri[m1]
     if text_search:
