@@ -41,7 +41,7 @@ df=df.merge(agroupados, how="left",left_on=["MPIO_CNMBR","DPTO_CNMBR"],
 
 today = datetime.datetime.now()
 year = today.year 
-jan_1 = datetime.date(year-2, 1, 1)
+jan_1 = datetime.date(year-1, 1, 1)
 dec_31 = datetime.date(year, 12, 31)
 
 
@@ -59,7 +59,8 @@ with tab0:
 
     on = st.toggle("Opciones extra")
     text_search=""
-    d=[jan_1,dec_31]
+    ini=jan_1
+    fini=dec_31
     
     if on:
         text_search = st.text_input("Busca contratos en tu ciudad.", value="")
@@ -72,14 +73,18 @@ with tab0:
             dec_31,
             format="MM.DD.YYYY",
         )
-        d
+        ini=d[0]
+        try:
+            fini=d[1]
+        except:
+            ...
     linksave=r"data/particular"
     terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
             "Descripcion del Proceso","Tipo de Contrato","Fecha de Firma",
             "Valor real","Valor Proyectado",extrange,"URLProceso"]]
     terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
-    terri=terri[terri["Fecha de Firma"]>d[0]]
-    terri=terri[terri["Fecha de Firma"]<=d[1]]            
+    terri=terri[terri["Fecha de Firma"]>ini]
+    terri=terri[terri["Fecha de Firma"]<=fini]            
     m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
     df_search = terri[m1]
     if text_search:
