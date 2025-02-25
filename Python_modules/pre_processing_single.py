@@ -35,7 +35,7 @@ filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado",
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
 filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"]*filtrado1["exchange_rate"]
 filtrado1["Valor real"]=filtrado1["Valor real"]*filtrado1["exchange_rate"]
-filtrado1[extrange]=(filtrado1["perc_error"]-filtrado1["predicterr"])*filtrado1["Valor real"]
+filtrado1[extrange]=((filtrado1["Valor real"]-filtrado1["Valor Proyectado"])/filtrado1["Valor real"]).abs()
 
 filtrado1["range-"]=filtrado1["exchange_rate"]*filtrado1["Valor Proyectado"]/2
 filtrado1["veces la predicción"]=(filtrado1["Valor real"]/filtrado1["Valor Proyectado"])
@@ -44,7 +44,7 @@ filtrado1["Ciudad Entidad"]=filtrado1["Ciudad"].apply(str.upper)
 unique_dept=pd.unique(filtrado1["Departamento Entidad"])
 unique_cities=pd.unique(filtrado1["Ciudad Entidad"])
 unique_sector=pd.unique(filtrado1["Tipo de Contrato"])
-filtrado1=filtrado1.sort_values(extrange,ascending=False)
+filtrado1=filtrado1.sort_values(extrange,ascending=True)
 nombres= ["Nombre Entidad",
                      "Valor real","Valor Proyectado",extrange,"Similitud de valor",
                      "veces la predicción"]
@@ -54,18 +54,25 @@ filtrado1[nombres].groupby(["Nombre Entidad"]).sum().to_csv(r"data/groupedent.cs
 filtrado1[nombres+["veces la predicción","Ciudad Entidad","Departamento Entidad"]].groupby(["Ciudad Entidad","Departamento Entidad"]).sum().to_csv(r"data/groupedcit.csv")
 
 #similar al comunicación
-
+comu=pd.DataFrame()
 for i in range(0,40):
     prompt = "Pauta | Publicidad | Prensa | Periodismo | Periodista | Divulgación | Multimedia | Redes Sociales | Televisión | Radio | Radial | Periódico | Audiovisual | Video | Revista | Comunicaciones"
 
     filtrado2=filtrado1[50000*i:50000*(i+1)][["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso",]]
+                         "Valor real","Valor Proyectado","Duración del contrato",extrange,"Similitud de valor","veces la predicción","URLProceso",]]
     
     
     
     filtrado2=semantic_search(prompt,filtrado2,model)
+    filtrado2=filtrado2[filtrado2['similarity']>0.6]
     filtrado2=filtrado2.drop(['embeddings'],axis=1)
     filtrado2.to_csv(r"data/cleaned"+str(i)+".csv")
+    if i==0:
+        comu=filtrado2
+        
+    else:
+        comu=pd.concat([comu,filtrado2])
+    comu.to_csv(r"data/cleanedcomu.csv")
     print(i)
 
 linksave=r"data/particular"
