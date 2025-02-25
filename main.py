@@ -86,6 +86,8 @@ with tab0:
     terri=terri[terri["Fecha de Firma"]>ini]
     terri=terri[terri["Fecha de Firma"]<=fini]            
     m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
+    terri[extrange]=terri[extrange].abs()
+    terri=terri.sort_values(extrange,ascending=True)
     df_search = terri[m1]
     if text_search:
         st.dataframe(df_search .style.background_gradient(axis=None, cmap="Reds"))
@@ -120,7 +122,7 @@ with tab2:
 
 with tab3:
     agru=pd.read_csv(r"data/groupedent.csv")
-    agru=agru.sort_values("veces la predicción",ascending=False)
+    agru=agru.sort_values("veces la predicción",ascending=True)
     st.dataframe(agru.style.background_gradient(axis=None, cmap="Reds"))
     
 with tab4:
@@ -136,6 +138,6 @@ with tab5:
     
     
     resultingcom=pd.read_csv(r"data/cleanedcomu"+".csv")   
-
-    
+    resulting[extrange]=resulting[extrange].abs()
+    resulting=resulting.sort_values(extrange,ascending=True)
     st.dataframe(resultingcom.style.background_gradient(axis=None, cmap="Reds"))  
