@@ -107,7 +107,7 @@ with tab0:
                 extrange,
                 help="Que tan extraño nos parece el contrato según nuestras métricas",
                 y_min=0,
-                y_max=1,
+                y_max=2,
             ),
         },
         hide_index=True,) 
