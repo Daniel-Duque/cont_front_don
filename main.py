@@ -80,8 +80,8 @@ with tab0:
             ...
     linksave=r"data/particular"
     terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
-            "Descripcion del Proceso","Tipo de Contrato","Fecha de Firma",
-            "Valor real","Valor Proyectado",extrange,"URLProceso"]]
+            "Descripcion del Proceso","Valor real","Valor Proyectado",extrange,"Tipo de Contrato","Fecha de Firma",
+            "URLProceso"]]
     terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
     terri=terri[terri["Fecha de Firma"]>ini]
     terri=terri[terri["Fecha de Firma"]<=fini]            
@@ -144,8 +144,8 @@ with tab3:
     st.dataframe(agru.style.background_gradient(axis=None, cmap="Reds"))
     
 with tab4:
-    resulting2=resulting[["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
-                         "Valor real","Valor Proyectado",extrange,"Similitud de valor","veces la predicción","URLProceso"]][0:1000]      
+    resulting2=resulting[["Nombre Entidad","Descripcion del Proceso","Valor real","Valor Proyectado",extrange,"Tipo de Contrato","Género Representante Legal",
+                         "Similitud de valor","veces la predicción","URLProceso"]][0:1000]      
 
     
     st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))   
