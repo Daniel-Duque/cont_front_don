@@ -21,7 +21,15 @@ def semantic_search(prompt, df, model, top_k=1000):
     similarities = df['embeddings'].apply(lambda x: util.pytorch_cos_sim(prompt_embedding, x).item())
     df['similarity'] = similarities
     return df
-model = SentenceTransformer('all-distilroberta-v1')
+
+def extrange_calc(vhat,ehat,v):
+    if v>max(vhat,(vhat*(1+ehat))):
+        return(v/max(vhat,(vhat*(1+ehat))))
+    elif v<min(vhat,(vhat*(1+ehat))):
+        return v/min(vhat,(vhat*(1+ehat)))
+    else:
+        return 0
+model = SentenceTransformer("tomaarsen/static-similarity-mrl-multilingual-v1")
 filtrado1=pd.read_csv(r"data/compilado_error.csv",encoding="utf-8",sep=";")
 
 extrange="Tamaño valor extraño"
@@ -35,8 +43,9 @@ filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado",
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
 filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"]*filtrado1["exchange_rate"]
 filtrado1["Valor real"]=filtrado1["Valor real"]*filtrado1["exchange_rate"]
-filtrado1[extrange]=((filtrado1["Valor real"]-filtrado1["Valor Proyectado"])/filtrado1["Valor real"]).abs()
-
+filtrado1[extrange]=filtrado1.apply(lambda row: extrange_calc(
+    row["Valor Proyectado"],row['predicterr'],row["Valor real"]),axis=1)
+filtrado1[extrange]=abs(1-filtrado1["Similitud de valor"])
 filtrado1["range-"]=filtrado1["exchange_rate"]*filtrado1["Valor Proyectado"]/2
 filtrado1["veces la predicción"]=(filtrado1["Valor real"]/filtrado1["Valor Proyectado"])
 filtrado1["Departamento Entidad"]=filtrado1["Departamento"].apply(str.upper)
@@ -56,7 +65,7 @@ filtrado1[nombres+["veces la predicción","Ciudad Entidad","Departamento Entidad
 #similar al comunicación
 comu=pd.DataFrame()
 for i in range(0,40):
-    prompt = "Pauta | Publicidad | Prensa | Periodismo | Periodista | Divulgación | Multimedia | Redes Sociales | Televisión | Radio | Radial | Periódico | Audiovisual | Video | Revista | Comunicaciones"
+    prompt = "Pauta | Publicidad | Prensa | Periodismo | Periodista | Divulgación | Multimedia publicitaria | Redes Sociales | propaganda en Televisión | publicidad en Radio | cuña Radial | Periódico |propaganda Audiovisual | Video | Revista | Comunicaciones divulgativas"
 
     filtrado2=filtrado1[50000*i:50000*(i+1)][["Nombre Entidad","Descripcion del Proceso","Tipo de Contrato","Género Representante Legal",
                          "Valor real","Valor Proyectado","Duración del contrato",extrange,"Similitud de valor","veces la predicción","URLProceso",]]
@@ -64,7 +73,7 @@ for i in range(0,40):
     
     
     filtrado2=semantic_search(prompt,filtrado2,model)
-    filtrado2=filtrado2[filtrado2['similarity']>0.6]
+    filtrado2=filtrado2[filtrado2['similarity']>0.3]
     filtrado2=filtrado2.drop(['embeddings'],axis=1)
     filtrado2.to_csv(r"data/cleaned"+str(i)+".csv")
     if i==0:

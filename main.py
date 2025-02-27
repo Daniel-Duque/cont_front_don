@@ -90,9 +90,27 @@ with tab0:
     terri=terri.sort_values(extrange,ascending=True)
     df_search = terri[m1]
     if text_search:
-        st.dataframe(df_search .style.background_gradient(axis=None, cmap="Reds"))
+        st.dataframe(df_search.style.background_gradient(axis=None, cmap="Reds"), 
+                     column_config={
+            extrange: st.column_config.BarChartColumn(
+                extrange,
+                help="Que tan extraño nos parece el contrato según nuestras métricas",
+                y_min=0,
+                y_max=1,
+            ),
+        },
+        hide_index=True,)
     else:
-        st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"))    
+        st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"), 
+                     column_config={
+            extrange: st.column_config.BarChartColumn(
+                extrange,
+                help="Que tan extraño nos parece el contrato según nuestras métricas",
+                y_min=0,
+                y_max=1,
+            ),
+        },
+        hide_index=True,) 
     
     
  
@@ -140,4 +158,13 @@ with tab5:
     resultingcom=pd.read_csv(r"data/cleanedcomu"+".csv")   
     resulting[extrange]=resulting[extrange].abs()
     resulting=resulting.sort_values(extrange,ascending=True)
-    st.dataframe(resultingcom.style.background_gradient(axis=None, cmap="Reds"))  
+    st.dataframe(resultingcom.style.background_gradient(axis=None, cmap="Reds"), 
+                 column_config={
+        extrange: st.column_config.BarChartColumn(
+            extrange,
+            help="Que tan extraño nos parece el contrato según nuestras métricas",
+            y_min=0,
+            y_max=1,
+        ),
+    },
+    hide_index=True,)  
