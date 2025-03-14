@@ -11,6 +11,12 @@ import pandas as pd
 import os
 from sentence_transformers import SentenceTransformer
 from sentence_transformers import util
+import datetime
+today = datetime.date.today()
+first = today.replace(day=1)
+last_month = first - datetime.timedelta(days=1)
+month=last_month.strftime('%Y-%m')
+url="https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=10000000&Fecha_de_Cargue_en_el_SECOP="+"2022-02"
 
 def semantic_k(prompt, df, model,similitud_min=0.4,k=20 ):
     # Generate embeddings for the descriptions
