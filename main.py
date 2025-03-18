@@ -30,7 +30,7 @@ extrange="Tamaño valor extraño"
 resulting=pd.read_csv(r"data/cleaned0.csv")
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
-pd.set_option("styler.render.max_elements", 864344)
+pd.set_option("styler.render.max_elements", 8600000)
 tab0,tab1,tab2,tab3,tab4,tab5= st.tabs(["Corrupción cero",'mapas',"Calidad de la predicción","Acumulado por entidades",'Diez mil contratos mas extraños',"comunicación"])
 
     
