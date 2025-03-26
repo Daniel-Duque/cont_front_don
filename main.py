@@ -31,7 +31,7 @@ resulting=pd.read_csv(r"data/cleaned0.csv")
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 8600000)
-tab0,tab1,tab2,tab3,tab4,tab5= st.tabs(["Corrupción cero",'mapas',"Calidad de la predicción","Acumulado por entidades",'Diez mil contratos mas extraños',"comunicación"])
+tab0,tab1,tab2,tab3,tab4,tab5= st.tabs(["Corrupción cero","comunicación"])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")
@@ -114,43 +114,8 @@ with tab0:
     
     
  
-with tab1:
-    depto=st.selectbox("Departamento Entidad",
-                       pd.unique(filtrado1["Departamento Entidad"]),key=1)
-    
 
-    premap=filtrado1[filtrado1["Departamento Entidad"]==depto]
-    
-  
-    submap=df[df["DPTO_CNMBR"]==depto]    
-
-    fig = px.choropleth(submap, geojson=submap.geometry, locations=submap.index,
-                        color=submap["Tamaño valor extraño"], color_continuous_scale='inferno_r')
-    fig.update_geos(fitbounds="locations", visible=False)
-    st.plotly_chart(fig)
-    
 with tab2:
-    
-    fig, axs = plt.subplots(nrows=1, ncols=1)
-    df_clean=df.dropna()
-    axs.hist2d(resulting["Valor real"],resulting["Valor Proyectado"],density=True,range=[[0,5e3],[0,5e3]],norm=mpl.colors.LogNorm(), #cmap=mpl.cm.gray
-                     bins=50)
-
-    st.pyplot(fig)
-
-with tab3:
-    agru=pd.read_csv(r"data/groupedent.csv")
-    agru=agru.sort_values("veces la predicción",ascending=True)
-    st.dataframe(agru.style.background_gradient(axis=None, cmap="Reds"))
-    
-with tab4:
-    resulting2=resulting[["Nombre Entidad","Descripcion del Proceso","Valor real","Valor Proyectado",extrange,"Tipo de Contrato","Género Representante Legal",
-                         "Similitud de valor","veces la predicción","URLProceso"]][0:1000]      
-
-    
-    st.dataframe(resulting2.style.background_gradient(axis=None, cmap="Reds"))   
-    
-with tab5:
   
     
     
