@@ -31,7 +31,7 @@ resulting=pd.read_csv(r"data/cleaned0.csv")
 
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 8600000)
-tab0,tab1,tab2,tab3,tab4,tab5= st.tabs(["Corrupción cero","comunicación"])
+tab0,tab1= st.tabs(["Corrupción cero","comunicación"])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")
@@ -115,7 +115,7 @@ with tab0:
     
  
 
-with tab2:
+with tab1:
   
     
     
