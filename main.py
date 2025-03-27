@@ -80,9 +80,13 @@ with tab0:
             except:
                 ...
         linksave=r"data/particular"
-        terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
-                "Descripcion del Proceso","Valor real","Valor Proyectado",extrange,"Tipo de Contrato","Fecha de Firma",
-                "URLProceso"]]
+        try:
+            terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
+                    "Descripcion del Proceso","Valor real","Valor Proyectado",extrange,"Tipo de Contrato","Fecha de Firma",
+                    "URLProceso"]]
+        except Exception as e:
+            st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
+            return False
         terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
         terri=terri[terri["Fecha de Firma"]>ini]
         terri=terri[terri["Fecha de Firma"]<=fini]            
@@ -90,7 +94,9 @@ with tab0:
         terri[extrange]=terri[extrange].abs()
         terri=terri.sort_values(extrange,ascending=True)
         df_search = terri[m1]
-        if text_search:
+        if df_search.empty:
+            st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
+        elif text_search:
             st.dataframe(df_search.style.background_gradient(axis=None, cmap="Reds"), 
                          column_config={
                 extrange: st.column_config.BarChartColumn(
