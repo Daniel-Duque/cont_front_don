@@ -11,14 +11,11 @@ Original file is located at
 
 import pandas as pd
 import os
-import plotly.express as px
-import matplotlib.pyplot as plt
-from plotly.subplots import make_subplots
-import plotly.graph_objs as go
-import geopandas as gp
-import seaborn
+
+
+
 import streamlit as st
-import matplotlib as mpl
+
 import datetime
 st.set_page_config(layout='wide')
 
@@ -35,9 +32,7 @@ tab0,tab1= st.tabs(["Corrupción cero","comunicación"])
 
     
 agroupados=pd.read_csv(r"data/groupedcit.csv")
-df = gp.read_file(r"data/maps/MGN_MPIO_POLITICO.shp") 
-df=df.merge(agroupados, how="left",left_on=["MPIO_CNMBR","DPTO_CNMBR"],
-            right_on=["Ciudad Entidad","Departamento Entidad"])    
+
 
 today = datetime.datetime.now()
 year = today.year 
@@ -49,70 +44,76 @@ dec_31 = datetime.date(year, 12, 31)
 
 with tab0:
   
-    depto=st.selectbox("Departamento Entidad",
-                       pd.unique(filtrado1["Departamento Entidad"]),key=2)
-    muni=st.selectbox("Ciudad Entidad",
-                       pd.unique(filtrado1[filtrado1["Departamento Entidad"]==depto]["Ciudad Entidad"]),key=3)
-    #text search taken from https://blog.streamlit.io/create-a-search-engine-with-streamlit-and-google-sheets/
-
-
-
-    on = st.toggle("Opciones extra")
-    text_search=""
-    ini=jan_1
-    fini=dec_31
+    if "app_runs" not in st.session_state:
+        st.session_state.app_runs = 0
+        st.session_state.fragment_runs = 0
+    @st.fragment
+    def select_df():
+        st.session_state.fragment_runs += 1
+        depto=st.selectbox("Departamento Entidad",
+                           pd.unique(filtrado1["Departamento Entidad"]),key=2)
+        muni=st.selectbox("Ciudad Entidad",
+                           pd.unique(filtrado1[filtrado1["Departamento Entidad"]==depto]["Ciudad Entidad"]),key=3)
+        #text search taken from https://blog.streamlit.io/create-a-search-engine-with-streamlit-and-google-sheets/
     
-    if on:
-        text_search = st.text_input("Busca contratos en tu ciudad.", value="")
-
+    
+    
+        on = st.toggle("Opciones extra")
+        text_search=""
+        ini=jan_1
+        fini=dec_31
         
-        d = st.date_input(
-            "",
-            (jan_1, datetime.date(year, 1, 7)),
-            jan_1,
-            dec_31,
-            format="MM.DD.YYYY",
-        )
-        ini=d[0]
-        try:
-            fini=d[1]
-        except:
-            ...
-    linksave=r"data/particular"
-    terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
-            "Descripcion del Proceso","Valor real","Valor Proyectado",extrange,"Tipo de Contrato","Fecha de Firma",
-            "URLProceso"]]
-    terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
-    terri=terri[terri["Fecha de Firma"]>ini]
-    terri=terri[terri["Fecha de Firma"]<=fini]            
-    m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
-    terri[extrange]=terri[extrange].abs()
-    terri=terri.sort_values(extrange,ascending=True)
-    df_search = terri[m1]
-    if text_search:
-        st.dataframe(df_search.style.background_gradient(axis=None, cmap="Reds"), 
-                     column_config={
-            extrange: st.column_config.BarChartColumn(
-                extrange,
-                help="Que tan extraño nos parece el contrato según nuestras métricas",
-                y_min=0,
-                y_max=1,
-            ),
-        },
-        hide_index=True,)
-    else:
-        st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"), 
-                     column_config={
-            extrange: st.column_config.BarChartColumn(
-                extrange,
-                help="Que tan extraño nos parece el contrato según nuestras métricas",
-                y_min=0,
-                y_max=2,
-            ),
-        },
-        hide_index=True,) 
+        if on:
+            text_search = st.text_input("Busca contratos en tu ciudad.", value="")
     
+            
+            d = st.date_input(
+                "",
+                (jan_1, datetime.date(year, 1, 7)),
+                jan_1,
+                dec_31,
+                format="MM.DD.YYYY",
+            )
+            ini=d[0]
+            try:
+                fini=d[1]
+            except:
+                ...
+        linksave=r"data/particular"
+        terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
+                "Descripcion del Proceso","Valor real","Valor Proyectado",extrange,"Tipo de Contrato","Fecha de Firma",
+                "URLProceso"]]
+        terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
+        terri=terri[terri["Fecha de Firma"]>ini]
+        terri=terri[terri["Fecha de Firma"]<=fini]            
+        m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
+        terri[extrange]=terri[extrange].abs()
+        terri=terri.sort_values(extrange,ascending=True)
+        df_search = terri[m1]
+        if text_search:
+            st.dataframe(df_search.style.background_gradient(axis=None, cmap="Reds"), 
+                         column_config={
+                extrange: st.column_config.BarChartColumn(
+                    extrange,
+                    help="Que tan extraño nos parece el contrato según nuestras métricas",
+                    y_min=0,
+                    y_max=1,
+                ),
+            },
+            hide_index=True,)
+        else:
+            st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"), 
+                         column_config={
+                extrange: st.column_config.BarChartColumn(
+                    extrange,
+                    help="Que tan extraño nos parece el contrato según nuestras métricas",
+                    y_min=0,
+                    y_max=2,
+                ),
+            },
+            hide_index=True,) 
     
+    select_df()
  
 
 with tab1:
