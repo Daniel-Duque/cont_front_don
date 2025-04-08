@@ -108,7 +108,7 @@ with tab0:
                     help="Que tan extraño nos parece el contrato según nuestras métricas",
                     min_value=0,
                     max_value=1,
-                ),
+                ),"URLProceso": st.column_config.LinkColumn("URLProceso")
             },
             hide_index=True,)
         else:
@@ -119,7 +119,7 @@ with tab0:
                     help="Que tan extraño nos parece el contrato según nuestras métricas",
                     min_value=0,
                     max_value=1,
-                ),
+                ),"URLProceso": st.column_config.LinkColumn("URLProceso")
             },
             hide_index=True,) 
     
