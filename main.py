@@ -82,39 +82,41 @@ with tab0:
         linksave=r"data/particular"
         try:
             terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
-                    "Descripcion del Proceso","Valor real","Valor Proyectado",extrange,"Tipo de Contrato","Fecha de Firma",
+                    "Descripcion del Proceso","Valor real","Valor Proyectado","Tipo de Contrato","Fecha de Firma",
                     "URLProceso"]]
         except Exception as e:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
             return False
         terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
+        terri[extrange]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor real"]
         terri=terri[terri["Fecha de Firma"]>ini]
         terri=terri[terri["Fecha de Firma"]<=fini]            
         m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
-        terri[extrange]=terri[extrange].abs()
-        terri=terri.sort_values(extrange,ascending=True)
+        terri["extrange"]=terri[extrange].abs()
+        terri=terri.sort_values("extrange",ascending=True)
+        terri = terri
         df_search = terri[m1]
         if df_search.empty:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
         elif text_search:
-            st.dataframe(df_search.style.background_gradient(axis=None, cmap="Reds"), 
+            st.dataframe(df_search.style.map(lambda x: f"background-color: { '#cd6155' if x>0.7 else ' #ec7063 ' if x>=0.3 else '#58d68d' if x>=-0.5 else '#5dade2' if x>=-1 else '#5499c7'}", subset=extrange), 
                          column_config={
-                extrange: st.column_config.BarChartColumn(
-                    extrange,
+                "extrange": st.column_config.ProgressColumn(
+                    "extrange",
                     help="Que tan extraño nos parece el contrato según nuestras métricas",
-                    y_min=0,
-                    y_max=1,
+                    min_value=0,
+                    max_value=1,
                 ),
             },
             hide_index=True,)
         else:
-            st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"), 
+            st.dataframe(terri.style.map(lambda x: f"background-color: { '#cd6155' if x>0.7 else ' #ec7063 ' if x>=0.3 else '#58d68d' if x>=-0.5 else '#5dade2' if x>=-1 else '#5499c7'}", subset=extrange), 
                          column_config={
-                extrange: st.column_config.BarChartColumn(
-                    extrange,
+                "extrange": st.column_config.ProgressColumn(
+                    "extrange",
                     help="Que tan extraño nos parece el contrato según nuestras métricas",
-                    y_min=0,
-                    y_max=2,
+                    min_value=0,
+                    max_value=1,
                 ),
             },
             hide_index=True,) 
