@@ -30,7 +30,7 @@ def extrange_calc(vhat,ehat,v):
     else:
         return 0
 model = SentenceTransformer("tomaarsen/static-similarity-mrl-multilingual-v1")
-filtrado1=pd.read_csv(r"data/compilado_error.csv",encoding="utf-8",sep=";")
+filtrado1=pd.read_csv(r"C:\Users\usuario\Documents\contract-transparency-copia\data\resultados/compilado_error_neu.csv",encoding="utf-8",sep=";")
 
 extrange="Tamaño valor extraño"
 filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado",
