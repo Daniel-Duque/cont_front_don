@@ -41,6 +41,7 @@ filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado",
 
 
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
+filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"].apply(lambda x: x if x>0.220 else 0.220)
 filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"]*filtrado1["exchange_rate"]
 filtrado1["Valor real"]=filtrado1["Valor real"]*filtrado1["exchange_rate"]
 filtrado1[extrange]=(filtrado1["Valor real"]-filtrado1["Valor Proyectado"])/filtrado1["Valor real"]
@@ -53,7 +54,7 @@ unique_dept=pd.unique(filtrado1["Departamento Entidad"])
 unique_cities=pd.unique(filtrado1["Ciudad Entidad"])
 unique_sector=pd.unique(filtrado1["Tipo de Contrato"])
 filtrado1=filtrado1.sort_values(extrange,ascending=True)
-
+ 
 nombres= ["Nombre Entidad",
                      "Valor real","Valor Proyectado",extrange,
                      "veces la predicción"]
