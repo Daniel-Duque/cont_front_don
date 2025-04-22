@@ -19,7 +19,7 @@ import datetime
 link_image=r"imagenes/ID_SAPO_ID_SAPO_colores.svg"
 
 st.set_page_config(layout='wide')
-
+st.logo(link_image, icon_image=link_image,size="large")
 
 filtrado1=pd.read_csv(r"data/dicc/Ciudades.csv").sort_values(["Departamento Entidad","Ciudad Entidad"],ascending=False)
 
@@ -117,7 +117,7 @@ with tab0:
         if df_search.empty:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
         elif text_search:
-            st.dataframe(df_search.style.map(lambda x: f"background-color: { '#cd6155' if x>0.7 else ' #ec7063 ' if x>=0.3 else '#58d68d' if x>=-0.5 else '#5dade2' if x>=-1 else '#5499c7'}", subset=extrange), 
+            st.dataframe(df_search.style.map(lambda x: f"background-color: { '#C34C31' if x>0.7 else '#D9841B' if x>=0.3 else '#009966' if x>=-0.5 else '#20B4B1' if x>=-1 else '#6574B1'}", subset=extrange), 
                          column_config={
                 "extrange": st.column_config.ProgressColumn(
                     "extrange",
@@ -128,7 +128,7 @@ with tab0:
             },
             hide_index=True,)
         else:
-            st.dataframe(terri.style.map(lambda x: f"background-color: { '#cd6155' if x>0.7 else ' #ec7063 ' if x>=0.3 else '#58d68d' if x>=-0.5 else '#5dade2' if x>=-1 else '#5499c7'}", subset=extrange), 
+            st.dataframe(terri.style.map(lambda x: f"background-color: { '#C34C31' if x>0.7 else '#D9841B' if x>=0.3 else '#009966' if x>=-0.5 else '#20B4B1' if x>=-1 else '#6574B1'}", subset=extrange), 
                          column_config={
                 "extrange": st.column_config.ProgressColumn(
                     "extrange",
