@@ -140,6 +140,7 @@ with tab0:
             hide_index=True,) 
     
     select_df()
+    st.info('Los valores proyectados son resultado de un conjunto de modelos de inteligencia artificial, por lo que pueden mostrar resultados imperfectos ', icon="ℹ️")
  
 
 with tab1:
