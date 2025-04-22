@@ -11,12 +11,13 @@ Original file is located at
 
 import pandas as pd
 import os
-
-
+import PIL
 
 import streamlit as st
 
 import datetime
+link_image=r"imagenes/ID_SAPO_ID_SAPO_colores.svg"
+
 st.set_page_config(layout='wide')
 
 
@@ -25,7 +26,7 @@ filtrado1=pd.read_csv(r"data/dicc/Ciudades.csv").sort_values(["Departamento Enti
 extrange="Tamaño valor extraño"
 
 resulting=pd.read_csv(r"data/cleaned0.csv")
-link_image=r"imagenes/ID_SAPO_ID_SAPO_colores.svg"
+
 st.title("Banderas rojas contratación pública preliminar (valores en millones de pesos)")
 pd.set_option("styler.render.max_elements", 8600000)
 tab0,tab1= st.tabs(["Corrupción cero","comunicación"])
