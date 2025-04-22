@@ -63,7 +63,7 @@ with tab0:
         text_search=""
         ini=jan_1
         fini=dec_31
-        
+        tmi=False
         if on:
             text_search = st.text_input("Busca contratos en tu ciudad.", value="")
     
@@ -80,43 +80,62 @@ with tab0:
                 fini=d[1]
             except:
                 ...
+            tmi=st.toggle("recibir mucha información de cada contrato")
         linksave=r"data/particular"
         try:
             terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
-                    "Descripcion del Proceso","Valor real","Valor Proyectado",extrange,"Tipo de Contrato","Fecha de Firma",
+                    "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Fecha de Firma",
                     "URLProceso"]]
         except Exception as e:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
             return False
+        terri["frecuenc"]=terri['Duración del contrato'].apply(lambda x:x.split(" ")[1])
+        terri["momentoc"]=terri['Duración del contrato'].apply(lambda x:x.split(" ")[0])
+        terri["dias"]=terri.apply(lambda row:int(row["momentoc"])*30 if row["frecuenc"]=='Mes(es)' else int(row["momentoc"]),axis=1)
+        terri["valor proyectado por día"]=terri.apply(lambda row: row['Valor Proyectado']/row["dias"],axis=1)
+        terri["valor real por día"]=terri.apply(lambda row: row['Valor real']/row["dias"],axis=1)
         terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
+        terri[extrange]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor real"]
         terri=terri[terri["Fecha de Firma"]>ini]
         terri=terri[terri["Fecha de Firma"]<=fini]            
         m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
-        terri[extrange]=terri[extrange].abs()
-        terri=terri.sort_values(extrange,ascending=True)
+        terri["extrange"]=terri[extrange].abs()
+        terri=terri.sort_values("extrange",ascending=True)
+        if tmi:
+            valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
+                   'Valor Proyectado',"valor proyectado por día","valor real por día", 'Tipo de Contrato','Tamaño valor extraño','extrange','Duración del contrato', 'Fecha de Firma', 'URLProceso',
+                   ]
+        else:
+            valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
+                   'Valor Proyectado', 'Tipo de Contrato','Tamaño valor extraño','extrange', 'URLProceso',
+                   ]
+        
+        
+        terri = terri[valores]
+        
         df_search = terri[m1]
         if df_search.empty:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
         elif text_search:
-            st.dataframe(df_search.style.background_gradient(axis=None, cmap="Reds"), 
+            st.dataframe(df_search.style.map(lambda x: f"background-color: { '#cd6155' if x>0.7 else ' #ec7063 ' if x>=0.3 else '#58d68d' if x>=-0.5 else '#5dade2' if x>=-1 else '#5499c7'}", subset=extrange), 
                          column_config={
-                extrange: st.column_config.BarChartColumn(
-                    extrange,
+                "extrange": st.column_config.ProgressColumn(
+                    "extrange",
                     help="Que tan extraño nos parece el contrato según nuestras métricas",
-                    y_min=0,
-                    y_max=1,
-                ),
+                    min_value=0,
+                    max_value=1,
+                ),"URLProceso": st.column_config.LinkColumn("URLProceso")
             },
             hide_index=True,)
         else:
-            st.dataframe(terri.style.background_gradient(axis=None, cmap="Reds"), 
+            st.dataframe(terri.style.map(lambda x: f"background-color: { '#cd6155' if x>0.7 else ' #ec7063 ' if x>=0.3 else '#58d68d' if x>=-0.5 else '#5dade2' if x>=-1 else '#5499c7'}", subset=extrange), 
                          column_config={
-                extrange: st.column_config.BarChartColumn(
-                    extrange,
+                "extrange": st.column_config.ProgressColumn(
+                    "extrange",
                     help="Que tan extraño nos parece el contrato según nuestras métricas",
-                    y_min=0,
-                    y_max=2,
-                ),
+                    min_value=0,
+                    max_value=1,
+                ),"URLProceso": st.column_config.LinkColumn("URLProceso")
             },
             hide_index=True,) 
     
