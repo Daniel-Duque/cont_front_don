@@ -18,7 +18,11 @@ import streamlit as st
 import datetime
 link_image=r"imagenes/ID_SAPO_ID_SAPO_colores.svg"
 
-st.set_page_config(layout='wide')
+st.set_page_config(
+    page_title="Sapo",
+    page_icon=r"imagenes/ID_SAPO_ID_SAPO_colores.svg",
+    layout='wide'
+)
 st.logo(link_image, icon_image=link_image,size="large")
 
 filtrado1=pd.read_csv(r"data/dicc/Ciudades.csv").sort_values(["Departamento Entidad","Ciudad Entidad"],ascending=False)
