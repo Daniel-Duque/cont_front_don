@@ -69,7 +69,7 @@ with tab0:
         fini=dec_31
         tmi=False
         if on:
-            text_search = st.text_input("Busca contratos en tu ciudad.", value="")
+            text_search = st.text_input("Busca contratos por palabra clave.", value="")
     
             
             d = st.date_input(
