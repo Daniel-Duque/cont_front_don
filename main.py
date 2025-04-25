@@ -65,8 +65,8 @@ with tab0:
         fini=dec_31
         tmi=False
         if on:
-            text_search = st.text_input("Busca contratos en tu ciudad.", value="")
-    
+            text_search = st.text_input("Busca contratos según la descripción.", value="")
+            name_search = st.text_input("Busca contratos según el nombre del proveedor.", value="")
             
             d = st.date_input(
                 "",
@@ -84,7 +84,7 @@ with tab0:
         linksave=r"data/particular"
         try:
             terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
-                    "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Fecha de Firma",
+                    "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Proveedor Adjudicado","Fecha de Firma",
                     "URLProceso"]]
         except Exception as e:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
@@ -100,16 +100,17 @@ with tab0:
         terri[extrange]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor real"]
         terri=terri[terri["Fecha de Firma"]>ini]
         terri=terri[terri["Fecha de Firma"]<=fini]            
-        m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
+        m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False) & terri["Proveedor Adjudicado"].str.lower().str.contains(name_search,case=False)
         terri["extrange"]=terri[extrange].abs()
         terri=terri.sort_values("extrange",ascending=True)
         if tmi:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
-                   'Valor Proyectado',"valor proyectado por día","valor real por día", 'Tipo de Contrato','Tamaño valor extraño','extrange','Duración del contrato', 'Fecha de Firma', 'URLProceso',
+                   'Valor Proyectado',"valor proyectado por día","valor real por día", 'Tipo de Contrato',"Proveedor Adjudicado"
+                   ,'Tamaño valor extraño','extrange','Duración del contrato', 'Fecha de Firma', 'URLProceso',
                    ]
         else:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
-                   'Valor Proyectado', 'Tipo de Contrato','Tamaño valor extraño','extrange', 'URLProceso',
+                   'Valor Proyectado', 'Tipo de Contrato',"Proveedor Adjudicado",'Tamaño valor extraño','extrange', 'URLProceso',
                    ]
         
         
@@ -118,7 +119,7 @@ with tab0:
         df_search = terri[m1]
         if df_search.empty:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
-        elif text_search:
+        elif text_search or name_search:
             st.dataframe(df_search.style.map(lambda x: f"background-color: { '#C34C31' if x>0.7 else '#D9841B' if x>=0.3 else '#009966' if x>=-0.5 else '#20B4B1' if x>=-1 else '#6574B1'}", subset=extrange), 
                          column_config={
                 "extrange": st.column_config.ProgressColumn(
