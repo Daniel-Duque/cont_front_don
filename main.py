@@ -64,6 +64,7 @@ with tab0:
         ini=jan_1
         fini=dec_31
         tmi=False
+        name_search=""
         if on:
             text_search = st.text_input("Busca contratos según la descripción.", value="")
             name_search = st.text_input("Busca contratos según el nombre del proveedor.", value="")
