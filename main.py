@@ -64,6 +64,7 @@ with tab0:
         ini=jan_1
         fini=dec_31
         tmi=False
+        tmi2=False
         name_search=""
         if on:
             text_search = st.text_input("Busca contratos según la descripción.", value="")
@@ -82,14 +83,28 @@ with tab0:
             except:
                 ...
             tmi=st.toggle("recibir mucha información de cada contrato")
+            tmi2=st.toggle("recibir todos los contratos de mi ciudad (el proceso será lento)")
+            
         linksave=r"data/particular"
         try:
-            terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
+            terri=pd.DataFrame(columns=["Nombre Entidad",
                     "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Proveedor Adjudicado","Fecha de Firma",
-                    "URLProceso"]]
+                    "URLProceso"])
+            n=0
+            for i in os.listdir(linksave):
+                largo_texto=len(depto.upper()+"-"+muni.upper())
+                if i[0:largo_texto]==depto.upper()+"-"+muni.upper():
+                    terri2=pd.read_csv(linksave+"//"+i)[["Nombre Entidad",
+                            "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Proveedor Adjudicado","Fecha de Firma",
+                            "URLProceso"]]
+                    terri=pd.concat([terri,terri2])
+                    if not tmi2:
+                        break
+                    
         except Exception as e:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
             return False
+        terri=terri.reset_index()
         terri["frecuenc"]=terri['Duración del contrato'].apply(lambda x: x.split(" ")[1] if len(x.split(" "))>1 else "Mes(es)")
         
         terri["momentoc"]=terri['Duración del contrato'].apply(lambda x:x.split(" ")[0] if len(x.split(" "))>1 else 1)
@@ -145,7 +160,8 @@ with tab0:
     
     select_df()
     st.info('Los valores proyectados son resultado de un conjunto de modelos de inteligencia artificial, por lo que pueden mostrar resultados imperfectos ', icon="ℹ️")
- 
+    url="https://github.com/Daniel-Duque/cont_front_don"
+    st.write("para descargar los datasets completos puedes entrar aqui [link](%s)" % url)
 
 with tab1:
   
