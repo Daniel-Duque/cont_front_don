@@ -18,11 +18,7 @@ import streamlit as st
 import datetime
 link_image=r"imagenes/ID_SAPO_ID_SAPO_colores.svg"
 
-st.set_page_config(
-    page_title="Sapo",
-    page_icon=r"imagenes/ID_SAPO_ID_SAPO_colores.svg",
-    layout='wide'
-)
+st.set_page_config(layout='wide')
 st.logo(link_image, icon_image=link_image,size="large")
 
 filtrado1=pd.read_csv(r"data/dicc/Ciudades.csv").sort_values(["Departamento Entidad","Ciudad Entidad"],ascending=False)
@@ -68,9 +64,11 @@ with tab0:
         ini=jan_1
         fini=dec_31
         tmi=False
+        tmi2=False
+        name_search=""
         if on:
-            text_search = st.text_input("Busca contratos por palabra clave.", value="")
-    
+            text_search = st.text_input("Busca contratos según la descripción.", value="")
+            name_search = st.text_input("Busca contratos según el nombre del proveedor.", value="")
             
             d = st.date_input(
                 "",
@@ -85,14 +83,28 @@ with tab0:
             except:
                 ...
             tmi=st.toggle("recibir mucha información de cada contrato")
+            tmi2=st.toggle("recibir todos los contratos de mi ciudad (el proceso será lento)")
+            
         linksave=r"data/particular"
         try:
-            terri=pd.read_csv(linksave+"//"+depto.upper()+"-"+muni.upper()+"0"+".csv")[["Nombre Entidad",
-                    "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Fecha de Firma",
-                    "URLProceso"]]
+            terri=pd.DataFrame(columns=["Nombre Entidad",
+                    "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Proveedor Adjudicado","Fecha de Firma",
+                    "URLProceso"])
+            n=0
+            for i in os.listdir(linksave):
+                largo_texto=len(depto.upper()+"-"+muni.upper())
+                if i[0:largo_texto]==depto.upper()+"-"+muni.upper():
+                    terri2=pd.read_csv(linksave+"//"+i)[["Nombre Entidad",
+                            "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Proveedor Adjudicado","Fecha de Firma",
+                            "URLProceso"]]
+                    terri=pd.concat([terri,terri2])
+                    if not tmi2:
+                        break
+                    
         except Exception as e:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
             return False
+        terri=terri.reset_index()
         terri["frecuenc"]=terri['Duración del contrato'].apply(lambda x: x.split(" ")[1] if len(x.split(" "))>1 else "Mes(es)")
         
         terri["momentoc"]=terri['Duración del contrato'].apply(lambda x:x.split(" ")[0] if len(x.split(" "))>1 else 1)
@@ -104,16 +116,17 @@ with tab0:
         terri[extrange]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor real"]
         terri=terri[terri["Fecha de Firma"]>ini]
         terri=terri[terri["Fecha de Firma"]<=fini]            
-        m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False)
+        m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False) & terri["Proveedor Adjudicado"].str.lower().str.contains(name_search,case=False)
         terri["extrange"]=terri[extrange].abs()
         terri=terri.sort_values("extrange",ascending=True)
         if tmi:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
-                   'Valor Proyectado',"valor proyectado por día","valor real por día", 'Tipo de Contrato','Tamaño valor extraño','extrange','Duración del contrato', 'Fecha de Firma', 'URLProceso',
+                   'Valor Proyectado',"valor proyectado por día","valor real por día", 'Tipo de Contrato',"Proveedor Adjudicado"
+                   ,'Tamaño valor extraño','extrange','Duración del contrato', 'Fecha de Firma', 'URLProceso',
                    ]
         else:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
-                   'Valor Proyectado', 'Tipo de Contrato','Tamaño valor extraño','extrange', 'URLProceso',
+                   'Valor Proyectado', 'Tipo de Contrato',"Proveedor Adjudicado",'Tamaño valor extraño','extrange', 'URLProceso',
                    ]
         
         
@@ -122,7 +135,7 @@ with tab0:
         df_search = terri[m1]
         if df_search.empty:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
-        elif text_search:
+        elif text_search or name_search:
             st.dataframe(df_search.style.map(lambda x: f"background-color: { '#C34C31' if x>0.7 else '#D9841B' if x>=0.3 else '#009966' if x>=-0.5 else '#20B4B1' if x>=-1 else '#6574B1'}", subset=extrange), 
                          column_config={
                 "extrange": st.column_config.ProgressColumn(
@@ -147,7 +160,8 @@ with tab0:
     
     select_df()
     st.info('Los valores proyectados son resultado de un conjunto de modelos de inteligencia artificial, por lo que pueden mostrar resultados imperfectos ', icon="ℹ️")
- 
+    url="https://github.com/Daniel-Duque/cont_front_don"
+    st.write("para descargar los datasets completos puedes entrar aqui [link](%s)" % url)
 
 with tab1:
   
