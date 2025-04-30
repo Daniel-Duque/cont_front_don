@@ -125,12 +125,12 @@ with tab0:
         terri=terri.sort_values("extrange",ascending=True)
         if tmi:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
-                   'Valor Proyectado',"valor proyectado por día","valor real por día", 'Tipo de Contrato',"Proveedor Adjudicado"
-                   ,'Tamaño valor extraño','extrange','Duración del contrato', 'Fecha de Firma', 'URLProceso',
+                   'Valor Proyectado',"valor proyectado por día","valor real por día",'Tamaño valor extraño','extrange', 'Tipo de Contrato',"Proveedor Adjudicado"
+                   ,'Duración del contrato', 'Fecha de Firma', 'URLProceso',
                    ]
         else:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
-                   'Valor Proyectado', 'Tipo de Contrato',"Proveedor Adjudicado",'Tamaño valor extraño','extrange', 'URLProceso',
+                   'Valor Proyectado','Tamaño valor extraño','extrange', 'Tipo de Contrato',"Proveedor Adjudicado", 'URLProceso',
                    ]
         
         
