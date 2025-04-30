@@ -105,12 +105,16 @@ with tab0:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
             return False
         terri=terri.reset_index()
-        terri["frecuenc"]=terri['Duración del contrato'].apply(lambda x: x.split(" ")[1] if len(x.split(" "))>1 else "Mes(es)")
-        
-        terri["momentoc"]=terri['Duración del contrato'].apply(lambda x:x.split(" ")[0] if len(x.split(" "))>1 else 1)
-        terri["dias"]=terri.apply(lambda row:int(row["momentoc"])*30 if row["frecuenc"]=='Mes(es)' else int(row["momentoc"]),axis=1)
-        terri["dias"]=terri["dias"].apply(lambda x: x if x>0 else 1)
-        terri["valor proyectado por día"]=terri.apply(lambda row: row['Valor Proyectado']/row["dias"],axis=1)
+        try:
+            terri["frecuenc"]=terri['Duración del contrato'].apply(lambda x: x.split(" ")[1] if len(x.split(" "))>1 else "Mes(es)")
+            
+            terri["momentoc"]=terri['Duración del contrato'].apply(lambda x:int(x.split(" ")[0]) if len(x.split(" "))>1 else 1)
+            terri["dias"]=terri.apply(lambda row:int(row["momentoc"])*30 if row["frecuenc"]=='Mes(es)' else int(row["momentoc"]),axis=1)
+            terri["dias"]=terri["dias"].apply(lambda x: x if x>0 else 1)
+            terri["valor proyectado por día"]=terri.apply(lambda row: row['Valor Proyectado']/row["dias"],axis=1)
+        except Exception as e:
+            st.error('tuvimos una dificultad con los datos de este municipio', icon="🚨")
+            return False
         terri["valor real por día"]=terri.apply(lambda row: row['Valor real']/row["dias"],axis=1)
         terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
         terri[extrange]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor real"]
