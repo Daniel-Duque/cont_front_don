@@ -117,20 +117,21 @@ with tab0:
             return False
         terri["valor real por día"]=terri.apply(lambda row: row['Valor real']/row["dias"],axis=1)
         terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
-        terri[extrange]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor real"]
+        terri["distancia real-proyectado"]=(terri["Valor real"]-terri["Valor Proyectado"])
+        terri["diferencia porcentual"]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor Proyectado"]
         terri=terri[terri["Fecha de Firma"]>ini]
         terri=terri[terri["Fecha de Firma"]<=fini]            
         m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False) & terri["Proveedor Adjudicado"].str.lower().str.contains(name_search,case=False)
-        terri["extrange"]=terri[extrange].abs()
-        terri=terri.sort_values("extrange",ascending=True)
+        terri["diferencia porcentual absoluta"]=terri["diferencia porcentual"].abs()
+        terri=terri.sort_values("diferencia porcentual absoluta",ascending=True)
         if tmi:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
-                   'Valor Proyectado',"valor proyectado por día","valor real por día",'Tamaño valor extraño','extrange', 'Tipo de Contrato',"Proveedor Adjudicado"
+                   'Valor Proyectado',"valor real por día","valor proyectado por día","distancia real-proyectado","diferencia porcentual absoluta", 'Tipo de Contrato',"Proveedor Adjudicado"
                    ,'Duración del contrato', 'Fecha de Firma', 'URLProceso',
                    ]
         else:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
-                   'Valor Proyectado','Tamaño valor extraño','extrange', 'Tipo de Contrato',"Proveedor Adjudicado", 'URLProceso',
+                   'Valor Proyectado',"distancia real-proyectado","diferencia porcentual absoluta", 'Tipo de Contrato',"Proveedor Adjudicado", 'URLProceso',
                    ]
         
         
@@ -140,10 +141,11 @@ with tab0:
         if df_search.empty:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
         elif text_search or name_search:
-            st.dataframe(df_search.style.map(lambda x: f"background-color: { '#C34C31' if x>0.7 else '#D9841B' if x>=0.3 else '#009966' if x>=-0.5 else '#20B4B1' if x>=-1 else '#6574B1'}", subset=extrange), 
+            st.dataframe(df_search.style.map(lambda x:
+                        f"background-color: { '#C34C31' if x>1000 else '#D9841B' if x>=100 else '#009966' if x>=50 else '#20B4B1' if x>=20 else '#6574B1'}", subset="distancia real-proyectado"), 
                          column_config={
-                "extrange": st.column_config.ProgressColumn(
-                    "extrange",
+                "diferencia porcentual absoluta": st.column_config.ProgressColumn(
+                    "diferencia porcentual absoluta",
                     help="Que tan extraño nos parece el contrato según nuestras métricas",
                     min_value=0,
                     max_value=1,
@@ -151,10 +153,10 @@ with tab0:
             },
             hide_index=True,)
         else:
-            st.dataframe(terri.style.map(lambda x: f"background-color: { '#C34C31' if x>0.7 else '#D9841B' if x>=0.3 else '#009966' if x>=-0.5 else '#20B4B1' if x>=-1 else '#6574B1'}", subset=extrange), 
+            st.dataframe(terri.style.map(lambda x: f"background-color: { '#C34C31' if x>1000 else '#D9841B' if x>=100 else '#009966' if x>=50 else '#20B4B1' if x>=20 else '#6574B1'}", subset="distancia real-proyectado"), 
                          column_config={
-                "extrange": st.column_config.ProgressColumn(
-                    "extrange",
+                "diferencia porcentual absoluta": st.column_config.ProgressColumn(
+                    "diferencia porcentual absoluta",
                     help="Que tan extraño nos parece el contrato según nuestras métricas",
                     min_value=0,
                     max_value=1,
