@@ -66,10 +66,11 @@ with tab0:
         tmi=False
         tmi2=False
         name_search=""
+        entit_search=""
         if on:
             text_search = st.text_input("Busca contratos según la descripción.", value="")
             name_search = st.text_input("Busca contratos según el nombre del proveedor.", value="")
-            
+            entit_search = st.text_input("Busca contratos según la entidad contratante.", value="")
             d = st.date_input(
                 "",
                 (jan_1, datetime.date(year, 1, 7)),
@@ -121,7 +122,10 @@ with tab0:
         terri["diferencia porcentual"]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor Proyectado"]
         terri=terri[terri["Fecha de Firma"]>ini]
         terri=terri[terri["Fecha de Firma"]<=fini]            
-        m1 = terri["Descripcion del Proceso"].str.lower().str.contains(text_search,case=False) & terri["Proveedor Adjudicado"].str.lower().str.contains(name_search,case=False)
+        m1 = terri["Descripcion del Proceso"].str.lower().str.contains(
+            text_search,case=False) & terri["Proveedor Adjudicado"].str.lower().str.contains(
+                name_search,case=False) & terri["Nombre Entidad"].str.lower().str.contains(
+                    entit_search,case=False)
         terri["diferencia porcentual absoluta"]=terri["diferencia porcentual"].abs()
         terri=terri.sort_values("diferencia porcentual absoluta",ascending=True)
         if tmi:
