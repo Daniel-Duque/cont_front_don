@@ -41,7 +41,7 @@ filtrado1=filtrado1.rename(columns={"predict": "Valor Proyectado",
 
 
 filtrado1["exchange_rate"]=filtrado1["exchange_rate"]/1000
-filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"].apply(lambda x: x if x>0.220 else 0.220)
+filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"].apply(lambda x: x if x>0.220 else 0.220-x/2 if x>0 else 0.110+x/2)
 filtrado1["Valor Proyectado"]=filtrado1["Valor Proyectado"]*filtrado1["exchange_rate"]
 filtrado1["Valor real"]=filtrado1["Valor real"]*filtrado1["exchange_rate"]
 filtrado1[extrange]=(filtrado1["Valor real"]-filtrado1["Valor Proyectado"])/filtrado1["Valor real"]

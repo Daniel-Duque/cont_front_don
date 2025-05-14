@@ -73,7 +73,7 @@ with tab0:
             entit_search = st.text_input("Busca contratos según la entidad contratante.", value="")
             d = st.date_input(
                 "",
-                (jan_1, datetime.date(year, 1, 7)),
+                (jan_1, datetime.date(year, 5, 13)),
                 jan_1,
                 dec_31,
                 format="MM.DD.YYYY",
