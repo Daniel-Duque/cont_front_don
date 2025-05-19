@@ -84,7 +84,7 @@ with tab0:
             except:
                 ...
             tmi=st.toggle("recibir mucha información de cada contrato")
-            tmi2=st.toggle("recibir todos los contratos de mi ciudad (el proceso será lento)")
+            #tmi2=st.toggle("recibir todos los contratos de mi ciudad (el proceso será lento)")
             
         linksave=r"data/particular"
         try:
