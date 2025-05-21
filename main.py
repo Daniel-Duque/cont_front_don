@@ -84,7 +84,8 @@ with tab0:
             except:
                 ...
             tmi=st.toggle("recibir mucha información de cada contrato")
-            #tmi2=st.toggle("recibir todos los contratos de mi ciudad (el proceso será lento)")
+            if text_search or name_search or entit_search:
+                tmi2=st.toggle("recibir todos los contratos de mi ciudad (el proceso será lento)")
             
         linksave=r"data/particular"
         try:
@@ -92,9 +93,15 @@ with tab0:
                     "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Proveedor Adjudicado","Fecha de Firma",
                     "URLProceso"])
             n=0
+            c=0
             for i in os.listdir(linksave):
+
                 largo_texto=len(depto.upper()+"-"+muni.upper())
                 if i[0:largo_texto]==depto.upper()+"-"+muni.upper():
+                    c+=1
+                    if c>20:
+                        break                    
+                        
                     terri2=pd.read_csv(linksave+"//"+i)[["Nombre Entidad",
                             "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Proveedor Adjudicado","Fecha de Firma",
                             "URLProceso"]]
@@ -122,12 +129,13 @@ with tab0:
         terri["diferencia porcentual"]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor Proyectado"]
         terri=terri[terri["Fecha de Firma"]>ini]
         terri=terri[terri["Fecha de Firma"]<=fini]            
+
+        terri["diferencia porcentual absoluta"]=terri["diferencia porcentual"].abs()
+        terri=terri.sort_values("diferencia porcentual absoluta",ascending=True)
         m1 = terri["Descripcion del Proceso"].str.lower().str.contains(
             text_search,case=False) & terri["Proveedor Adjudicado"].str.lower().str.contains(
                 name_search,case=False) & terri["Nombre Entidad"].str.lower().str.contains(
                     entit_search,case=False)
-        terri["diferencia porcentual absoluta"]=terri["diferencia porcentual"].abs()
-        terri=terri.sort_values("diferencia porcentual absoluta",ascending=True)
         if tmi:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
                    'Valor Proyectado',"valor real por día","valor proyectado por día","distancia real-proyectado","diferencia porcentual absoluta", 'Tipo de Contrato',"Proveedor Adjudicado"
@@ -144,7 +152,7 @@ with tab0:
         df_search = terri[m1]
         if df_search.empty:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
-        elif text_search or name_search:
+        elif text_search or name_search or entit_search:
             st.dataframe(df_search.style.map(lambda x:
                         f"background-color: { '#C34C31' if x>1000 else '#D9841B' if x>=100 else '#009966' if x>=50 else '#20B4B1' if x>=20 else '#6574B1'}", subset="distancia real-proyectado"), 
                          column_config={
