@@ -105,6 +105,12 @@ with tab0:
                     terri2=pd.read_csv(linksave+"//"+i)[["Nombre Entidad",
                             "Descripcion del Proceso","Valor real","Valor Proyectado",'Duración del contrato',"Tipo de Contrato","Proveedor Adjudicado","Fecha de Firma",
                             "URLProceso"]]
+                    if text_search or name_search or entit_search:
+                        m1 = terri2["Descripcion del Proceso"].str.lower().str.contains(
+                            text_search,case=False) & terri2["Proveedor Adjudicado"].str.lower().str.contains(
+                                name_search,case=False) & terri2["Nombre Entidad"].str.lower().str.contains(
+                                    entit_search,case=False)
+                        terri2=terri2[m1]
                     terri=pd.concat([terri,terri2])
                     if not tmi2:
                         break
