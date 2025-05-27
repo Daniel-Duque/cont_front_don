@@ -138,10 +138,7 @@ with tab0:
 
         terri["diferencia porcentual absoluta"]=terri["diferencia porcentual"].abs()
         terri=terri.sort_values("diferencia porcentual absoluta",ascending=True)
-        m1 = terri["Descripcion del Proceso"].str.lower().str.contains(
-            text_search,case=False) & terri["Proveedor Adjudicado"].str.lower().str.contains(
-                name_search,case=False) & terri["Nombre Entidad"].str.lower().str.contains(
-                    entit_search,case=False)
+
         if tmi:
             valores=['Nombre Entidad', 'Descripcion del Proceso', 'Valor real',
                    'Valor Proyectado',"valor real por día","valor proyectado por día","distancia real-proyectado","diferencia porcentual absoluta", 'Tipo de Contrato',"Proveedor Adjudicado"
@@ -153,23 +150,9 @@ with tab0:
                    ]
         
         
-        terri = terri[valores]
-        
-        df_search = terri[m1]
-        if df_search.empty:
+        if terri.empty:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
-        elif text_search or name_search or entit_search:
-            st.dataframe(df_search.style.map(lambda x:
-                        f"background-color: { '#C34C31' if x>1000 else '#D9841B' if x>=100 else '#009966' if x>=50 else '#20B4B1' if x>=20 else '#6574B1'}", subset="distancia real-proyectado"), 
-                         column_config={
-                "diferencia porcentual absoluta": st.column_config.ProgressColumn(
-                    "diferencia porcentual absoluta",
-                    help="Que tan extraño nos parece el contrato según nuestras métricas",
-                    min_value=0,
-                    max_value=1,
-                ),"URLProceso": st.column_config.LinkColumn("URLProceso")
-            },
-            hide_index=True,)
+
         else:
             st.dataframe(terri.style.map(lambda x: f"background-color: { '#C34C31' if x>1000 else '#D9841B' if x>=100 else '#009966' if x>=50 else '#20B4B1' if x>=20 else '#6574B1'}", subset="distancia real-proyectado"), 
                          column_config={
