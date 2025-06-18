@@ -65,8 +65,10 @@ with tab0:
         fini=dec_31
         tmi=False
         tmi2=False
+        rare=False
         name_search=""
         entit_search=""
+        
         if on:
             text_search = st.text_input("Busca contratos según la descripción.", value="")
             name_search = st.text_input("Busca contratos según el nombre del proveedor.", value="")
@@ -84,6 +86,7 @@ with tab0:
             except:
                 ...
             tmi=st.toggle("recibir mucha información de cada contrato")
+            rare=st.toggle("Ver contratos muy extraños (al usar este botón se espera que el usuario entienda las limitaciones del modelo y que los resultados mostrados no son una señal exacta de corrupción)")
             if text_search or name_search or entit_search:
                 tmi2=st.toggle("recibir todos los contratos de mi ciudad (el proceso será lento)")
             
@@ -119,6 +122,7 @@ with tab0:
             st.error('No encontramos contratos para este municipio en los periodos que se tienen en cuenta', icon="🚨")
             return False
         terri=terri.reset_index()
+
         try:
             terri["frecuenc"]=terri['Duración del contrato'].apply(lambda x: x.split(" ")[1] if len(x.split(" "))>1 else "Mes(es)")
             
@@ -133,6 +137,8 @@ with tab0:
         terri["Fecha de Firma"]=pd.to_datetime(terri["Fecha de Firma"], format='%m/%d/%Y').dt.date
         terri["distancia real-proyectado"]=(terri["Valor real"]-terri["Valor Proyectado"])
         terri["diferencia porcentual"]=(terri["Valor real"]-terri["Valor Proyectado"])/terri["Valor Proyectado"]
+        if not rare:
+            terri=terri[terri["diferencia porcentual"]<2]
         terri=terri[terri["Fecha de Firma"]>ini]
         terri=terri[terri["Fecha de Firma"]<=fini]            
 
